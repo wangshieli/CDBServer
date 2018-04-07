@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DBMap">
+      <UniqueIdentifier>{f5570cec-a43f-4f16-9689-5f6e5ddd953e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemPool">
+      <UniqueIdentifier>{f1a91f64-1939-45c6-a6fc-19b211241f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBPool">
+      <UniqueIdentifier>{b06895c4-7eaf-4d08-b7f4-c726435f8074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{53460797-639b-4a90-aba7-b00d145c8a51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理">
+      <UniqueIdentifier>{93d83ce3-4e26-4de6-9989-2522394ded53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Excel导入">
+      <UniqueIdentifier>{d3177273-4cd4-4815-90d2-149dda162682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Sim操作">
+      <UniqueIdentifier>{3a6a3f2e-b910-4229-b401-25478fef261e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Kh操作">
+      <UniqueIdentifier>{dcf062a9-1d50-447d-8a3d-adaf5ec492e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Khjl操作">
+      <UniqueIdentifier>{9d05834b-db75-4101-907a-5c56ab2ea84e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Llc操作">
+      <UniqueIdentifier>{0cd76c65-cefd-4397-91e7-a7aed88caa63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Dxzh操作">
+      <UniqueIdentifier>{d3938fc9-88ce-47a2-b0be-9999334fc995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Lltc操作">
+      <UniqueIdentifier>{7b9a89eb-dce6-4569-b6dc-b32ef68cd69e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\User操作">
+      <UniqueIdentifier>{d2e3d580-f294-4bba-be6f-8c356b57e1ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DBPool.h">
+      <Filter>DBPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Database_map.h">
+      <Filter>DBMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MemPool.h">
+      <Filter>MemPool</Filter>
+    </ClInclude>
+    <ClInclude Include="SignalData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InitWinsock.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="IoWorkerThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestPost.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestComplete.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="ExcelLoad.h">
+      <Filter>业务处理\Excel导入</Filter>
+    </ClInclude>
+    <ClInclude Include="DealHeadTail.h">
+      <Filter>业务处理</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessCommand.h">
+      <Filter>业务处理</Filter>
+    </ClInclude>
+    <ClInclude Include="doKhData.h">
+      <Filter>业务处理\Kh操作</Filter>
+    </ClInclude>
+    <ClInclude Include="doKhjlData.h">
+      <Filter>业务处理\Khjl操作</Filter>
+    </ClInclude>
+    <ClInclude Include="doSimData.h">
+      <Filter>业务处理\Sim操作</Filter>
+    </ClInclude>
+    <ClInclude Include="doUserData.h">
+      <Filter>业务处理\User操作</Filter>
+    </ClInclude>
+    <ClInclude Include="doLlcData.h">
+      <Filter>业务处理\Llc操作</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDBServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DBPool.cpp">
+      <Filter>DBPool</Filter>
+    </ClCompile>
+    <ClCompile Include="Database_map.cpp">
+      <Filter>DBMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MemPool.cpp">
+      <Filter>MemPool</Filter>
+    </ClCompile>
+    <ClCompile Include="SignalData.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InitWinsock.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="IoWorkerThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestPost.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestComplete.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="ExcelLoad.cpp">
+      <Filter>业务处理\Excel导入</Filter>
+    </ClCompile>
+    <ClCompile Include="DealHeadTail.cpp">
+      <Filter>业务处理</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessCommand.cpp">
+      <Filter>业务处理</Filter>
+    </ClCompile>
+    <ClCompile Include="doKhData.cpp">
+      <Filter>业务处理\Kh操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doKhjlData.cpp">
+      <Filter>业务处理\Khjl操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doSimData.cpp">
+      <Filter>业务处理\Sim操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doUserData.cpp">
+      <Filter>业务处理\User操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doLlcData.cpp">
+      <Filter>业务处理\Llc操作</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
