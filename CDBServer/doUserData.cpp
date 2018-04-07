@@ -22,22 +22,48 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
-		std::string strKhmc = (pDataObj++)->as<std::string>();
-		std::string strLxfs = (pDataObj++)->as<std::string>();
-		std::string strJlxm = (pDataObj++)->as<std::string>();
+		std::string strUserName = (pDataObj++)->as<std::string>();
+		std::string strUserPwd = (pDataObj++)->as<std::string>();
+		int nAuthority = (pDataObj++)->as<int>();
 		std::string strBz = (pDataObj++)->as<std::string>();
 
-		const TCHAR* pSql = _T("INSERT INTO kh_tbl (id,khmc,lxfs,jlxm,xgsj,bz) VALUES(null,'%s','%s','%s',now(),'%s')");
+		const TCHAR* pSql = _T("INSERT INTO user_tbl (id,username,password,authority,xgsj) VALUES(null,'%s','%s',%d,now())");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strLxfs.c_str(), strJlxm.c_str(), strBz.c_str());
+		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str(), nAuthority);
 
 		if (!ExecuteSql(sql))
 		{
 			goto error;
 		}
-
+		// https://blog.csdn.net/byxdaz/article/details/78032970   获取insert数据的id
 		goto success;
+	}
+	break;
+
+	case USER_LOGIN:
+	{
+		std::string strUserName = (pObj++)->as<std::string>();
+		std::string strUserPwd = (pObj++)->as<std::string>();
+		const TCHAR* pSql = _T("SELECT * FROM user_tbl WHERE username='%s' AND password='%s'");
+		TCHAR sql[256];
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+		_msgpack.pack_array(2);
+		_variant_t varId = bobj->pRecorder->GetCollect("id");
+		_variant_t varAuthority = bobj->pRecorder->GetCollect("authority");
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 

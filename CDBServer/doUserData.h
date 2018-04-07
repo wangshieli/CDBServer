@@ -4,6 +4,7 @@
 typedef enum
 {
 	USER_ADD = 0X01,
+	USER_LOGIN,
 	USER_LIST,
 }SUBCMD_KH;
 
