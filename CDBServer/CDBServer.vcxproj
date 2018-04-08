@@ -158,6 +158,7 @@
     <ClInclude Include="doLlcData.h" />
     <ClInclude Include="doLltcData.h" />
     <ClInclude Include="doSimData.h" />
+    <ClInclude Include="doSsdqData.h" />
     <ClInclude Include="doUserData.h" />
     <ClInclude Include="ExcelLoad.h" />
     <ClInclude Include="InitWinsock.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="doLlcData.cpp" />
     <ClCompile Include="doLltcData.cpp" />
     <ClCompile Include="doSimData.cpp" />
+    <ClCompile Include="doSsdqData.cpp" />
     <ClCompile Include="doUserData.cpp" />
     <ClCompile Include="ExcelLoad.cpp" />
     <ClCompile Include="InitWinsock.cpp" />

@@ -142,7 +142,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		{
 			_msgpack.pack_array(2);
 			var = bobj->pRecorder->GetCollect("xsrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("num");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
@@ -268,15 +268,15 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			var = bobj->pRecorder->GetCollect("dj");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("xsrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("jhrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("xfrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("dqrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("zxrq");
-			PackCollectDate(_msgpack, var);
+			PackCollectDate(_msgpack, var, false);
 			var = bobj->pRecorder->GetCollect("bz");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();

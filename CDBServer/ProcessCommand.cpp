@@ -11,6 +11,7 @@
 #include "doLltcData.h"
 #include "doDxzhData.h"
 #include "ExcelLoad.h"
+#include "doSsdqData.h"
 
 int ProcessCommand(BUFFER_OBJ* bobj)
 {
@@ -73,6 +74,11 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 		case EXCEL_LOAD:
 		{
 			doExcelLoad(result_, bobj);
+		}
+		break;
+		case SSDQ_DATA:
+		{
+			doSsdqData(result_, bobj);
 		}
 		break;
 		default:

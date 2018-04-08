@@ -160,10 +160,11 @@ bool doExcelLoad(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 				msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 				std::string strJrhm = (pDataObj++)->as<std::string>();
 				std::string strXfrq = (pDataObj++)->as<std::string>();
+				int nMonth = (pDataObj++)->as<int>();
 				TCHAR sql[256];
-				const TCHAR* pSql = _T("update sim_tbl set xfrq='%s' where jrhm='%s'");
+				const TCHAR* pSql = _T("update sim_tbl set dqrq=DATE_ADD(IF('%s'>dqrq,'%s',dqrq),INTERVAL %d MONTH),xfrq='%s' where jrhm='%s'");
 				memset(sql, 0x00, sizeof(sql));
-				_stprintf_s(sql, 256, pSql, strXfrq.c_str(), strJrhm.c_str());
+				_stprintf_s(sql, 256, pSql, strXfrq.c_str(), strXfrq.c_str(), nMonth, strXfrq.c_str(), strJrhm.c_str());
 				_variant_t EffectedRecCount;
 				(*pConner)->Execute(_bstr_t(sql), &EffectedRecCount, adCmdText);
 			}
