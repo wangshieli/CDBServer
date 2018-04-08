@@ -152,9 +152,11 @@
     <ClInclude Include="Database_map.h" />
     <ClInclude Include="DBPool.h" />
     <ClInclude Include="DealHeadTail.h" />
+    <ClInclude Include="doDxzhData.h" />
     <ClInclude Include="doKhData.h" />
     <ClInclude Include="doKhjlData.h" />
     <ClInclude Include="doLlcData.h" />
+    <ClInclude Include="doLltcData.h" />
     <ClInclude Include="doSimData.h" />
     <ClInclude Include="doUserData.h" />
     <ClInclude Include="ExcelLoad.h" />
@@ -173,9 +175,11 @@
     <ClCompile Include="Database_map.cpp" />
     <ClCompile Include="DBPool.cpp" />
     <ClCompile Include="DealHeadTail.cpp" />
+    <ClCompile Include="doDxzhData.cpp" />
     <ClCompile Include="doKhData.cpp" />
     <ClCompile Include="doKhjlData.cpp" />
     <ClCompile Include="doLlcData.cpp" />
+    <ClCompile Include="doLltcData.cpp" />
     <ClCompile Include="doSimData.cpp" />
     <ClCompile Include="doUserData.cpp" />
     <ClCompile Include="ExcelLoad.cpp" />

@@ -3,6 +3,13 @@
 #include "SignalData.h"
 #include "ProcessCommand.h"
 #include "DealHeadTail.h"
+#include "doUserData.h"
+#include "doSimData.h"
+#include "doKhData.h"
+#include "doKhjlData.h"
+#include "doLlcData.h"
+#include "doLltcData.h"
+#include "doDxzhData.h"
 #include "ExcelLoad.h"
 
 int ProcessCommand(BUFFER_OBJ* bobj)
@@ -28,6 +35,41 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 
 		switch (nCmd)
 		{
+		case USER_DATA:
+		{
+			doUserData(result_, bobj);
+		}
+		break;
+		case SIM_DATA:
+		{
+			doSimData(result_, bobj);
+		}
+		break;
+		case KH_DATA:
+		{
+			doKhData(result_, bobj);
+		}
+		break;
+		case KHJL_DATA:
+		{
+			doKhjlData(result_, bobj);
+		}
+		break;
+		case LLC_DATA:
+		{
+			doLlcData(result_, bobj);
+		}
+		break;
+		case LLTC_DATA:
+		{
+			doLltcData(result_, bobj);
+		}
+		break;
+		case DXZH_DATA:
+		{
+			doDxzhData(result_, bobj);
+		}
+		break;
 		case EXCEL_LOAD:
 		{
 			doExcelLoad(result_, bobj);

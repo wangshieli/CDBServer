@@ -108,6 +108,12 @@
     <ClInclude Include="doLlcData.h">
       <Filter>业务处理\Llc操作</Filter>
     </ClInclude>
+    <ClInclude Include="doLltcData.h">
+      <Filter>业务处理\Lltc操作</Filter>
+    </ClInclude>
+    <ClInclude Include="doDxzhData.h">
+      <Filter>业务处理\Dxzh操作</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="doLlcData.cpp">
       <Filter>业务处理\Llc操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doLltcData.cpp">
+      <Filter>业务处理\Lltc操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doDxzhData.cpp">
+      <Filter>业务处理\Dxzh操作</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -44,8 +44,11 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		std::string strJlxm = (pObj++)->as<std::string>();
 		int nStart = (nTag - 1) * nPage;
+
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		std::string strJlxm = (pDataObj++)->as<std::string>();
 
 		if (!bobj->pRecorder)
 		{
@@ -69,13 +72,24 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		int nTemp = lRstCount - nStart;
 		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		_variant_t var;
 		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(2);
-			_variant_t varId = bobj->pRecorder->GetCollect("id");
-			_variant_t varKhmc = bobj->pRecorder->GetCollect("khmc");
+			_msgpack.pack_array(6);
+			var = bobj->pRecorder->GetCollect("id");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("khmc");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("lxfs");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jlxm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("xgsj");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("bz");
+			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
@@ -93,8 +107,11 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		std::string strJlxm = (pObj++)->as<std::string>();
 		int nStart = (nTag - 1) * nPage;
+
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		std::string strJlxm = (pDataObj++)->as<std::string>();
 
 		if (!bobj->pRecorder)
 		{
@@ -118,13 +135,16 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		int nTemp = lRstCount - nStart;
 		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		_variant_t var;
 		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
 			_msgpack.pack_array(2);
-			_variant_t varXsrq = bobj->pRecorder->GetCollect("xsrq");
-			_variant_t varNum = bobj->pRecorder->GetCollect("num");
+			var = bobj->pRecorder->GetCollect("xsrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("num");
+			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
@@ -163,13 +183,102 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		int nTemp = lRstCount - nStart;
 		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		_variant_t var;
 		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
 			_msgpack.pack_array(2);
-			_variant_t varId = bobj->pRecorder->GetCollect("id");
-			_variant_t varKhmc = bobj->pRecorder->GetCollect("khmc");
+			var = bobj->pRecorder->GetCollect("id");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jlxm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("lxfs");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("xgsj");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("bz");
+			PackCollectDate(_msgpack, var);
+			bobj->pRecorder->MoveNext();
+			bRt = bobj->pRecorder->GetadoEOF();
+		}
+
+		if (nPage > 0)
+		{
+			ReleaseRecorder(bobj->pRecorder);
+		}
+
+		DealTail(sbuf, bobj);
+	}
+	break;
+
+	case KHJL_SIM_XSRQ:
+	{
+		int nTag = (pObj++)->as<int>();
+		int nPage = (pObj++)->as<int>();
+		int nStart = (nTag - 1) * nPage;
+
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		std::string strJlxm = (pDataObj++)->as<std::string>();
+		std::string strXsrq = (pDataObj++)->as<std::string>();
+
+		if (!bobj->pRecorder)
+		{
+			const TCHAR* pSql = _T("SELECT * FROM sim_tbl where jlxm='%s' and xsrq='%s'");
+			TCHAR sql[256];
+			memset(sql, 0x00, sizeof(sql));
+			_stprintf_s(sql, 256, pSql, strJlxm.c_str(), strXsrq.c_str());
+			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			{
+				goto error;
+			}
+		}
+
+		int lRstCount = bobj->pRecorder->GetRecordCount();
+		_msgpack.pack_array(6);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(nTag);
+		_msgpack.pack(0);
+		_msgpack.pack(lRstCount);
+
+		int nTemp = lRstCount - nStart;
+		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		_variant_t var;
+		bobj->pRecorder->Move(nStart);
+		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
+		while (!bRt && nPage--)
+		{
+			_msgpack.pack_array(14);
+			var = bobj->pRecorder->GetCollect("id");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jrhm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("iccid");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("dxzh");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("khmc");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("llchm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("llcxl");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("dj");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("xsrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jhrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("xfrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("dqrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("zxrq");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("bz");
+			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
 		}

@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include <msgpack.hpp>
 #include "SignalData.h"
-#include "doLlcData.h"
+#include "doLltcData.h"
 #include "DBPool.h"
 #include "DealHeadTail.h"
 
-bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
+bool doLltcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
-	int nCmd = LLC_DATA;
+	int nCmd = LLTC_DATA;
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
 	int nSubCmd = (pObj++)->as<int>();
@@ -18,19 +18,17 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	switch (nSubCmd)
 	{
-	case LLC_ADD:
+	case LLTC_ADD:
 	{
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
-		std::string strKhmc = (pDataObj++)->as<std::string>();
-		std::string strLxfs = (pDataObj++)->as<std::string>();
-		std::string strJlxm = (pDataObj++)->as<std::string>();
-		std::string strBz = (pDataObj++)->as<std::string>();
+		std::string strTcmc = (pDataObj++)->as<std::string>();
+		std::string strTcfl = (pDataObj++)->as<std::string>();
 
-		const TCHAR* pSql = _T("INSERT INTO llc_tbl (id,llchm,llclx,dxzh,bz,xgsj) VALUES(null,'%s','%s','%s','%s',now())");
+		const TCHAR* pSql = _T("INSERT INTO lltc_tbl (id,tcmc,tcfl,xgsj) VALUES(null,'%s','%s',now())");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strLxfs.c_str(), strJlxm.c_str(), strBz.c_str());
+		_stprintf_s(sql, 256, pSql, strTcmc.c_str(), strTcfl.c_str());
 
 		if (!ExecuteSql(sql))
 		{
@@ -41,7 +39,7 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	}
 	break;
 
-	case LLC_LIST:
+	case LLTC_LIST:
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
@@ -49,7 +47,7 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM llc_tbl ");
+			const TCHAR* pSql = _T("SELECT * FROM lltc_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -71,18 +69,14 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(6);
+			_msgpack.pack_array(4);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llchm");
+			var = bobj->pRecorder->GetCollect("tcmc");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llclx");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("dxzh");
+			var = bobj->pRecorder->GetCollect("tcfl");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("xgsj");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("bz");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();

@@ -1,6 +1,6 @@
 #pragma once
 
-#define EXCEL_LOAD	0X01
+#define EXCEL_LOAD	0X08
 typedef enum
 {
 	EXCEL_SIM = 0X01,
