@@ -3,6 +3,7 @@
 #include "RequestComplete.h"
 #include "MemPool.h"
 #include "RequestPost.h"
+#include "ProcessCommand.h"
 
 struct tcp_keepalive alive_in = { TRUE, 1000 * 10, 1000 };
 struct tcp_keepalive alive_out = { 0 };
@@ -61,8 +62,8 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 		&remoteAddr, &remoteAddrlen);
 
 	// 数据处理
-	if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
-	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	//if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
+	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
@@ -77,8 +78,9 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 	}
 	else
 	{
+		ProcessCommand(c_bobj);
 		//doParseData(c_bobj);
-		_tprintf(_T("%s\n"), c_bobj->data);
+		//_tprintf(_T("%s\n"), c_bobj->data);
 	}
 
 	return;
@@ -149,6 +151,7 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	else
 	{
 		//doParseData(c_bobj);
+		ProcessCommand(c_bobj);
 	}
 }
 

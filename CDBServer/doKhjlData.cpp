@@ -188,7 +188,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(2);
+			_msgpack.pack_array(5);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("jlxm");
