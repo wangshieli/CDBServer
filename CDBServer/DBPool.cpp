@@ -98,7 +98,8 @@ bool CreateConner(_ConnectionPtr& pConner)
 	}
 	catch (_com_error e)
 	{
-		_tprintf(_T("pConner.CreateInstance(__uuidof(Connection)) failed: %s\n"), e.ErrorMessage());
+		_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		return false;
 	}
 	return true;
@@ -114,7 +115,8 @@ bool ReleaseConner(_ConnectionPtr& pConner)
 		}
 		catch (_com_error e)
 		{
-			_tprintf(_T("pConner->Close() failed: %s\n"), e.ErrorMessage());
+			_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+				e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		}
 
 		pConner.Release();
@@ -142,7 +144,8 @@ bool ConnectDatabase(_ConnectionPtr& pConner)
 	}
 	catch (_com_error e)
 	{
-		_tprintf(_T("pConner->Open() failed: %s\n"), e.ErrorMessage());
+		_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		return false;
 	}
 
@@ -234,6 +237,13 @@ bool Select_From_Tbl(const TCHAR* pSql, _RecordsetPtr& pRecorder)
 			return false;
 	}
 
+	if ((*pConner)->State != adStateOpen)
+	{
+		ReleaseConner(*pConner);
+		if (!ReInitConner(pConner))
+			return false;
+	}
+
 	if (!CreateRecorder(pRecorder))
 	{
 		FreeConner(pConner);
@@ -250,7 +260,8 @@ bool Select_From_Tbl(const TCHAR* pSql, _RecordsetPtr& pRecorder)
 	}
 	catch (_com_error e)
 	{
-		_tprintf(_T("pRecorder->Open() failed: %s\n"), e.ErrorMessage());
+		_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		goto error;
 	}
 
@@ -266,7 +277,6 @@ bool Select_From_Tbl(const TCHAR* pSql, _RecordsetPtr& pRecorder)
 
 error:
 	ReleaseRecorder(pRecorder);
-	ReleaseConner(*pConner);
 	FreeConner(pConner);
 	return false;
 }
@@ -302,7 +312,8 @@ bool CreateRecorder(_RecordsetPtr& pRecorder)
 	}
 	catch (_com_error e)
 	{
-		_tprintf(_T("pRecorder.CreateInstance(__uuidof(Recordset)) failed: %s\n"), e.ErrorMessage());
+		_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		return false;
 	}
 	return true;
@@ -318,7 +329,8 @@ void ReleaseRecorder(_RecordsetPtr& pRecorder)
 		}
 		catch (_com_error e)
 		{
-			_tprintf(_T("pRecorder->Close() failed: %s\n"), e.ErrorMessage());
+			_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+				e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		}
 
 		pRecorder.Release();
@@ -338,6 +350,13 @@ bool ExecuteSql(const TCHAR* pSql)
 			return false;
 	}
 
+	if ((*pConner)->State != adStateOpen)
+	{
+		ReleaseConner(*pConner);
+		if (!ReInitConner(pConner))
+			return false;
+	}
+
 	try
 	{
 		VARIANT nRecordAffected = { 0 };
@@ -347,7 +366,8 @@ bool ExecuteSql(const TCHAR* pSql)
 	}
 	catch (_com_error e)
 	{
-		_tprintf(_T("(*pConner)->Execute() failed: %s\n"), e.ErrorMessage());
+		_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		goto error;
 	}
 
@@ -355,7 +375,6 @@ bool ExecuteSql(const TCHAR* pSql)
 	return true;
 
 error:
-	ReleaseConner(*pConner); // È·±£ÏÂ´ÎÊ¹ÓÃµÄÊ±ºò±»ÖØÐÂ³õÊ¼»¯Á´½Ó
 	FreeConner(pConner);
 	return false;
 }
@@ -368,6 +387,13 @@ _ConnectionPtr* AllocTransConner()
 
 	if (!(*pConner))
 	{
+		if (!ReInitConner(pConner))
+			return NULL;
+	}
+
+	if ((*pConner)->State != adStateOpen)
+	{
+		ReleaseConner(*pConner);
 		if (!ReInitConner(pConner))
 			return NULL;
 	}

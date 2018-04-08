@@ -49,6 +49,8 @@ bool doExcelLoad(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		}
 		catch (_com_error e)
 		{
+			_tprintf(_T("%s-%d:´íÎóÐÅÏ¢:%s ´íÎó´úÂë:%08lx ´íÎóÔ´:%s ´íÎóÃèÊö:%s\n"), __FILE__, __LINE__,
+				e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 			(*pConner)->RollbackTrans();
 			FreeConner(pConner);
 			goto error;
