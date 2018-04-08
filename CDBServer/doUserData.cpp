@@ -56,6 +56,8 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("dj");
 		PackCollectDate(_msgpack, var);
+
+		ReleaseRecorder(bobj->pRecorder);
 		
 		DealTail(sbuf, bobj);
 	}
@@ -88,6 +90,8 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("dj");
 		PackCollectDate(_msgpack, var);
+
+		ReleaseRecorder(bobj->pRecorder);
 
 		DealTail(sbuf, bobj);
 	}

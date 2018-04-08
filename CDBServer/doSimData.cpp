@@ -165,6 +165,8 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		var = bobj->pRecorder->GetCollect("bz");
 		PackCollectDate(_msgpack, var);
 
+		ReleaseRecorder(bobj->pRecorder);
+
 		DealTail(sbuf, bobj);
 	}
 	break;
