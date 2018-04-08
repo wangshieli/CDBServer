@@ -26,7 +26,6 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		std::string strUserPwd = (pDataObj++)->as<std::string>();
 		int nAuthority = (pDataObj++)->as<int>();
 		double dDj = (pDataObj++)->as<double>();
-		std::string strBz = (pDataObj++)->as<std::string>();
 
 		const TCHAR* pSql = _T("INSERT INTO user_tbl (id,username,password,authority,dj,xgsj) VALUES(null,'%s','%s',%d,%lf,now())");
 		TCHAR sql[256];
@@ -64,8 +63,10 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case USER_LOGIN:
 	{
-		std::string strUserName = (pObj++)->as<std::string>();
-		std::string strUserPwd = (pObj++)->as<std::string>();
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		std::string strUserName = (pDataObj++)->as<std::string>();
+		std::string strUserPwd = (pDataObj++)->as<std::string>();
 		const TCHAR* pSql = _T("SELECT id,authority,dj FROM user_tbl WHERE username='%s' AND password='%s'");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));

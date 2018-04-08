@@ -16,7 +16,7 @@ byte csum(unsigned char *addr, int count)
 	return sum;
 }
 
-bool DealHead(BUFFER_OBJ* bobj)
+int DealHead(BUFFER_OBJ* bobj)
 {
 	const TCHAR* pRequest = bobj->data;
 	int nLen = bobj->dwRecvedCount;

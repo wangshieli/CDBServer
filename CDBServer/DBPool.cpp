@@ -255,6 +255,13 @@ bool Select_From_Tbl(const TCHAR* pSql, _RecordsetPtr& pRecorder)
 	}
 
 	FreeConner(pConner);
+
+	if (pRecorder->adoEOF)
+	{
+		ReleaseRecorder(pRecorder);
+		return false;
+	}
+
 	return true;
 
 error:
