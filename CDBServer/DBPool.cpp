@@ -252,6 +252,7 @@ bool Select_From_Tbl(const TCHAR* pSql, _RecordsetPtr& pRecorder)
 
 	try
 	{
+		(*pConner)->CursorLocation = adUseClient;
 		HRESULT hr = pRecorder->Open(_bstr_t(pSql), (*pConner).GetInterfacePtr(), adOpenStatic, adLockOptimistic, adCmdText);
 		if (FAILED(hr))
 		{

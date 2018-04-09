@@ -15,7 +15,9 @@ void AcceptCompFailed(void* _lobj, void* _c_obj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_c_obj;
 	SOCKET_OBJ* c_sobj = c_bobj->pRelatedSObj;
 
-	closesocket(c_sobj->sock);
+	lobj->RemoveAcpt(c_sobj);
+
+	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
 }
@@ -28,6 +30,8 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 	LISTEN_OBJ* lobj = (LISTEN_OBJ*)_lobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_c_bobj;
 	SOCKET_OBJ* c_sobj = c_bobj->pRelatedSObj;
+
+	lobj->RemoveAcpt(c_sobj);
 
 	//if (SOCKET_ERROR == WSAIoctl(c_sobj->sock, SIO_KEEPALIVE_VALS, &alive_in, sizeof(alive_in),
 	//	&alive_out, sizeof(alive_out), &ulBytesReturn, NULL, NULL))
@@ -86,7 +90,7 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 	return;
 
 error:
-	closesocket(c_sobj->sock);
+	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
 	return;
@@ -97,7 +101,7 @@ void RecvZeroCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 	
-	closesocket(c_sobj->sock);
+	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
 }
@@ -110,7 +114,7 @@ void RecvZeroCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	c_bobj->SetIoRequestFunction(RecvCompFailed, RecvCompSuccess);
 	if (!PostRecv(c_sobj, c_bobj))
 	{
-		closesocket(c_sobj->sock);
+		CSCloseSocket(c_sobj);
 		freeSObj(c_sobj);
 		freeBObj(c_bobj);
 		return;
@@ -122,7 +126,7 @@ void RecvCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
-	closesocket(c_sobj->sock);
+	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
 }
@@ -142,7 +146,7 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
 		{
-			closesocket(c_sobj->sock);
+			CSCloseSocket(c_sobj);
 			freeSObj(c_sobj);
 			freeBObj(c_bobj);
 			return;
@@ -160,7 +164,7 @@ void SendCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
-	closesocket(c_sobj->sock);
+	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
 }
@@ -178,7 +182,7 @@ void SendCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	{
 		if (!PostSend(c_sobj, c_bobj))
 		{
-			closesocket(c_sobj->sock);
+			CSCloseSocket(c_sobj);
 			freeSObj(c_sobj);
 			freeBObj(c_bobj);
 			return;
@@ -191,7 +195,7 @@ void SendCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 	if (!PostZeroRecv(c_sobj, c_bobj))
 	{
-		closesocket(c_sobj->sock);
+		CSCloseSocket(c_sobj);
 		freeSObj(c_sobj);
 		freeBObj(c_bobj);
 		return;

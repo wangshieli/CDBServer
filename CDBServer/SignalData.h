@@ -1,5 +1,8 @@
 #pragma once
 
+#include <tbb\concurrent_hash_map.h>
+using namespace tbb;
+
 typedef void(*PTIoRequestSuccess)(DWORD dwTranstion, void* key, void* buf);
 typedef void(*PTIoRequestFailed)(void* key, void* buf);
 
@@ -71,11 +74,13 @@ typedef struct _socket_obj
 public:
 	SOCKET sock;
 	struct _buffer_obj* pRelatedBObj;
+	int nKey;
 public:
 	void init()
 	{
 		sock = INVALID_SOCKET;
 		pRelatedBObj = NULL;
+		nKey = 0;
 	}
 }SOCKET_OBJ;
 #define SIZE_OF_SOCKET_OBJ sizeof(SOCKET_OBJ)
@@ -84,8 +89,9 @@ typedef struct _listen_obj
 {
 public:
 	SOCKET sListenSock;
-	DWORD dwAcceptExPendingCount;
 	HANDLE hPostAcceptExEvent;
+	
+	concurrent_hash_map<int, SOCKET_OBJ*> AcptMap;
 
 	~_listen_obj()
 	{
@@ -98,29 +104,34 @@ public:
 				CloseHandle(hPostAcceptExEvent);
 				hPostAcceptExEvent = NULL;
 			}
-			dwAcceptExPendingCount = 0;
 		}
 	}
 public:
 	void init()
 	{
 		sListenSock = INVALID_SOCKET;
-		dwAcceptExPendingCount = 0;
 		hPostAcceptExEvent = NULL;
+		AcptMap.clear();
 	}
 
-	/*void AddBObj2AccpetExPendingList(struct _buffer_obj* obj)
+	void InsertAcpt(SOCKET_OBJ* sobj)
 	{
-		InterlockedIncrement(&dwAcceptExPendingCount);
+		concurrent_hash_map<int, SOCKET_OBJ*>::accessor a_ad;
+		AcptMap.insert(a_ad, sobj->nKey);
+		a_ad->second = sobj;
 	}
 
-	void DeleteBObjFromAccpetExPendingList(struct _buffer_obj* obj)
+	void RemoveAcpt(SOCKET_OBJ* sobj)
 	{
-		InterlockedDecrement(&dwAcceptExPendingCount);
-	}*/
+		concurrent_hash_map<int, SOCKET_OBJ*>::accessor a_rm;
+		if (AcptMap.find(a_rm, sobj->nKey))
+			AcptMap.erase(a_rm);
+	}
 }LISTEN_OBJ;
 
 bool UniqueInstance();
+
+int GetRand();
 
 extern LPFN_ACCEPTEX lpfnAccpetEx;
 extern LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockaddrs;

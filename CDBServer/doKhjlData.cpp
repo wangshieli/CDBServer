@@ -156,7 +156,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM khjl_tbl ");
+			const TCHAR* pSql = _T("SELECT * FROM khjl_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;

@@ -78,7 +78,7 @@ void DealTail(msgpack::sbuffer& sBuf, BUFFER_OBJ* bobj)
 	SOCKET_OBJ* sobj = bobj->pRelatedSObj;
 	if (!PostSend(sobj, bobj))
 	{
-		closesocket(sobj->sock);
+		CSCloseSocket(sobj);
 		freeSObj(sobj);
 		freeBObj(bobj);
 		return;

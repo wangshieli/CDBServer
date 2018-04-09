@@ -33,6 +33,9 @@ bool PostAcceptEx(LISTEN_OBJ* lobj)
 	c_bobj->pRelatedSObj = c_sobj;
 	c_bobj->SetIoRequestFunction(AcceptCompFailed, AcceptCompSuccess);
 
+	c_sobj->nKey = GetRand();
+	lobj->InsertAcpt(c_sobj);
+
 	bool brt = lpfnAccpetEx(lobj->sListenSock,
 		c_sobj->sock, c_bobj->data,
 		c_bobj->datalen - ((sizeof(sockaddr_in) + 16) * 2),
@@ -42,7 +45,8 @@ bool PostAcceptEx(LISTEN_OBJ* lobj)
 		if (WSA_IO_PENDING != WSAGetLastError())
 		{
 			_tprintf(_T("acceptex Ê§°Ü\n"));
-			closesocket(c_sobj->sock);
+			lobj->RemoveAcpt(c_sobj);
+			CSCloseSocket(c_sobj);
 			freeBObj(c_bobj);
 			freeSObj(c_sobj);
 			return false;
@@ -99,4 +103,13 @@ BOOL PostSend(SOCKET_OBJ* _sobj, BUFFER_OBJ* _bobj)
 		return FALSE;
 
 	return TRUE;
+}
+
+void CSCloseSocket(SOCKET_OBJ* _sobj)
+{
+	if (INVALID_SOCKET != _sobj->sock)
+	{
+		closesocket(_sobj->sock);
+		_sobj->sock = INVALID_SOCKET;
+	}
 }

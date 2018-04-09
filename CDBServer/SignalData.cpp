@@ -18,3 +18,13 @@ bool UniqueInstance()
 
 	return true;
 }
+
+
+std::random_device randdev;
+std::default_random_engine randeg(randdev());
+std::uniform_int_distribution<int> urand(0);
+
+int GetRand()
+{
+	return urand(randeg);
+}
