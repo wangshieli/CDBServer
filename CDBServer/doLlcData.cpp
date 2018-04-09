@@ -49,7 +49,7 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM llc_tbl ");
+			const TCHAR* pSql = _T("SELECT id,llchm,llclx,dxzh,bz,xgsj FROM llc_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;

@@ -101,7 +101,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,username,authority,dj,xgsj FROM user_tbl ");
+			const TCHAR* pSql = _T("SELECT id,username,authority,dj,xgsj FROM user_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;

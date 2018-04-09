@@ -47,7 +47,7 @@ bool doLltcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM lltc_tbl ");
+			const TCHAR* pSql = _T("SELECT id,tcmc,tcfl,xgsj FROM lltc_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;

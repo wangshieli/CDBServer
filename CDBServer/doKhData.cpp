@@ -148,7 +148,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM kh_tbl ");
+			const TCHAR* pSql = _T("SELECT id,khmc,lxfs,jlxm,xgsj,bz FROM kh_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -203,7 +203,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM sim_tbl where khmc='%s'");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str());
@@ -241,7 +241,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llcxl");
+			var = bobj->pRecorder->GetCollect("llclx");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("dj");
 			PackCollectDate(_msgpack, var);
@@ -278,7 +278,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM sim_tbl where khmc='%s' and xsrq='%s'");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s' and xsrq='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strXsrq.c_str());
@@ -316,7 +316,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llcxl");
+			var = bobj->pRecorder->GetCollect("llclx");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("dj");
 			PackCollectDate(_msgpack, var);

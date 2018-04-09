@@ -50,7 +50,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM sim_tbl ");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -85,7 +85,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llcxl");
+			var = bobj->pRecorder->GetCollect("llclx");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("dj");
 			PackCollectDate(_msgpack, var);
@@ -115,7 +115,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strJrhm = (pDataObj++)->as<std::string>();
 
-		const TCHAR* pSql = _T("SELECT * FROM sim_tbl where jrhm='%s'");
+		const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where jrhm='%s'");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strJrhm.c_str());
@@ -143,7 +143,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("llchm");
 		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llcxl");
+		var = bobj->pRecorder->GetCollect("llclx");
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("dj");
 		PackCollectDate(_msgpack, var);

@@ -46,7 +46,7 @@ bool doSsdqData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM llc_tbl ");
+			const TCHAR* pSql = _T("SELECT id,ssdq,xgsj FROM ssdq_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -68,18 +68,12 @@ bool doSsdqData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(6);
+			_msgpack.pack_array(3);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llchm");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llclx");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("dxzh");
+			var = bobj->pRecorder->GetCollect("ssdq");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("xgsj");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("bz");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();

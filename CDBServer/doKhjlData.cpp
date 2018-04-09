@@ -52,7 +52,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM kh_tbl WHERE jlxm='%s'");
+			const TCHAR* pSql = _T("SELECT id,khmc,lxfs,jlxm,xgsj,bz FROM kh_tbl WHERE jlxm='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strJlxm.c_str());
@@ -156,7 +156,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM khjl_tbl");
+			const TCHAR* pSql = _T("SELECT id,jlxm,lxfs,xgsj,bz FROM khjl_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -210,7 +210,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM sim_tbl where jlxm='%s' and xsrq='%s'");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where jlxm='%s' and xsrq='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strJlxm.c_str(), strXsrq.c_str());
@@ -248,7 +248,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llcxl");
+			var = bobj->pRecorder->GetCollect("llclx");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("dj");
 			PackCollectDate(_msgpack, var);

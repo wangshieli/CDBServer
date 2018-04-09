@@ -50,7 +50,7 @@ bool doDxzhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT * FROM dxzh_tbl ");
+			const TCHAR* pSql = _T("SELECT id,dxzh,userid,pwd,skey,xgsj,bz FROM dxzh_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
