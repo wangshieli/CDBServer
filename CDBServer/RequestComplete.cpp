@@ -33,17 +33,10 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 
 	lobj->RemoveAcpt(c_sobj);
 
-	//if (SOCKET_ERROR == WSAIoctl(c_sobj->sock, SIO_KEEPALIVE_VALS, &alive_in, sizeof(alive_in),
-	//	&alive_out, sizeof(alive_out), &ulBytesReturn, NULL, NULL))
-	//	_tprintf(_T("设置客户端连接心跳检测失败, errCode = %d\n"), WSAGetLastError());
+	if (SOCKET_ERROR == WSAIoctl(c_sobj->sock, SIO_KEEPALIVE_VALS, &alive_in, sizeof(alive_in),
+		&alive_out, sizeof(alive_out), &ulBytesReturn, NULL, NULL))
+		_tprintf(_T("设置客户端连接心跳检测失败, errCode = %d\n"), WSAGetLastError());
 
-	//setsockopt(c_sobj->sock,
-	//	SOL_SOCKET,
-	//	SO_UPDATE_ACCEPT_CONTEXT,
-	//	(char*)&lobj->sListenSock, sizeof(lobj->sListenSock));
-	//_tprintf(_T("setsockoptn errcode = %d\n"), WSAGetLastError());
-
-	// 将客户端绑定到完成端口
 	if (NULL == CreateIoCompletionPort((HANDLE)c_sobj->sock, hCompPort, (ULONG_PTR)c_sobj, 0))
 	{
 		_tprintf(_T("客户端socket绑定完成端口失败, errCode = %d\n"), WSAGetLastError());
@@ -65,8 +58,6 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 		&localAddr, &localAddrlen,
 		&remoteAddr, &remoteAddrlen);
 
-	// 数据处理
-	//if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
 	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
@@ -75,16 +66,10 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 			_tprintf(_T("客户端信息接收失败, errCode = %d\n"), WSAGetLastError());
 			goto error;
 		}
-
-		//Sleep(1000 * 5);
-		//if (SOCKET_ERROR == shutdown(c_sobj->sock, 0))
-		//	_tprintf(_T("shutdow errcode = %d\n"), WSAGetLastError());
 	}
 	else
 	{
 		ProcessCommand(c_bobj);
-		//doParseData(c_bobj);
-		//_tprintf(_T("%s\n"), c_bobj->data);
 	}
 
 	return;
@@ -140,7 +125,6 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
 	c_bobj->dwRecvedCount += dwTransion;
-	//if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
 	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
@@ -154,7 +138,6 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	}
 	else
 	{
-		//doParseData(c_bobj);
 		ProcessCommand(c_bobj);
 	}
 }
