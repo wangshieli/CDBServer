@@ -86,8 +86,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		var = bobj->pRecorder->GetCollect("due_15d");
 		PackCollectDate(_msgpack, var);
 
-		ReleaseRecorder(bobj->pRecorder);
-
 		DealTail(sbuf, bobj);
 	}
 	break;
@@ -136,11 +134,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
-		}
-
-		if (nPage > 0)
-		{
-			ReleaseRecorder(bobj->pRecorder);
 		}
 
 		DealTail(sbuf, bobj);
@@ -192,11 +185,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
-		}
-
-		if (nPage > 0)
-		{
-			ReleaseRecorder(bobj->pRecorder);
 		}
 
 		DealTail(sbuf, bobj);
@@ -273,11 +261,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
 
-		if (nPage > 0)
-		{
-			ReleaseRecorder(bobj->pRecorder);
-		}
-
 		DealTail(sbuf, bobj);
 	}
 	break;
@@ -351,11 +334,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			PackCollectDate(_msgpack, var);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
-		}
-
-		if (nPage > 0)
-		{
-			ReleaseRecorder(bobj->pRecorder);
 		}
 
 		DealTail(sbuf, bobj);

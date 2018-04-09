@@ -24,13 +24,7 @@ public:
 		pfnFailed = NULL;
 		pfnSuccess = NULL;
 		pRelatedSObj = NULL;
-		if (pRecorder)
-		{
-			if (pRecorder->State == adStateOpen)
-				pRecorder->Close();
-			pRecorder.Release();
-			pRecorder = NULL;
-		}
+		ReleaseRecorder();
 		dwRecvedCount = 0;
 		dwSendedCount = 0;
 		datalen = usefull_space;
@@ -41,6 +35,17 @@ public:
 	{
 		pfnFailed = _pfnFailed;
 		pfnSuccess = _pfnSuccess;
+	}
+
+	void ReleaseRecorder()
+	{
+		if (pRecorder)
+		{
+			if (pRecorder->State == adStateOpen)
+				pRecorder->Close();
+			pRecorder.Release();
+			pRecorder = NULL;
+		}
 	}
 }BUFFER_OBJ;
 #define SIZE_OF_BUFFER_OBJ sizeof(BUFFER_OBJ)

@@ -96,7 +96,7 @@ void RecvZeroCompFailed(void* _sobj, void* _bobj)
 {
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
-
+	
 	closesocket(c_sobj->sock);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);

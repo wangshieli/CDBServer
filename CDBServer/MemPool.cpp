@@ -70,6 +70,7 @@ BUFFER_OBJ* allocBObj(DWORD nSize)
 
 void freeBObj(BUFFER_OBJ* obj)
 {
+	obj->ReleaseRecorder();
 	EnterCriticalSection(&csBObj);
 	if (vctBObj.size() < 1000)
 		vctBObj.push_back(obj);

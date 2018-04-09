@@ -105,11 +105,6 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
 
-		if (nPage > 0)
-		{
-			ReleaseRecorder(bobj->pRecorder);
-		}
-
 		DealTail(sbuf, bobj);
 	}
 	break;
@@ -164,8 +159,6 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		PackCollectDate(_msgpack, var, false);
 		var = bobj->pRecorder->GetCollect("bz");
 		PackCollectDate(_msgpack, var);
-
-		ReleaseRecorder(bobj->pRecorder);
 
 		DealTail(sbuf, bobj);
 	}
