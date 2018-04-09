@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SignalData.h"
+#include <random>
 
 HANDLE hCompPort = NULL;
 DWORD g_dwPageSize = 0;
