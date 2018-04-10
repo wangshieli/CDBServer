@@ -82,6 +82,7 @@ public:
 	struct _buffer_obj* pRelatedBObj;
 	ADDRINFOT *sAddrInfo;
 	int nKey;
+	DWORD dwTick;
 public:
 	void init()
 	{
@@ -89,6 +90,7 @@ public:
 		pRelatedBObj = NULL;
 		sAddrInfo = NULL;
 		nKey = 0;
+		dwTick = 0;
 	}
 }SOCKET_OBJ;
 #define SIZE_OF_SOCKET_OBJ sizeof(SOCKET_OBJ)

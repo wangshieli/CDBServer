@@ -7,6 +7,38 @@
 #include "ProcessCommand.h"
 #include "DealHeadTail.h"
 
+concurrent_hash_map<int, SOCKET_OBJ*> ConnMap;
+
+void InsertConn(SOCKET_OBJ* sobj)
+{
+	concurrent_hash_map<int, SOCKET_OBJ*>::accessor a_ad;
+	ConnMap.insert(a_ad, sobj->nKey);
+	a_ad->second = sobj;
+}
+
+void RemoveConn(SOCKET_OBJ* sobj)
+{
+	concurrent_hash_map<int, SOCKET_OBJ*>::accessor a_rm;
+	if (ConnMap.find(a_rm, sobj->nKey))
+		ConnMap.erase(a_rm);
+}
+
+unsigned int _stdcall checkconnectex(LPVOID pVoid)
+{
+	HANDLE hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	while (WaitForSingleObject(hEvent, 60 * 1000) == WAIT_TIMEOUT)
+	{
+		DWORD dwCurTick = GetTickCount();
+		for (concurrent_hash_map<int, SOCKET_OBJ*>::iterator i = ConnMap.begin(); i != ConnMap.end(); ++i)
+		{
+			if (dwCurTick - i->second->dwTick > 60 * 1000)
+				CSCloseSocket(i->second);
+		}
+	}
+
+	return 0;
+}
+
 bool doApi(BUFFER_OBJ* bobj)
 {
 	int nError = 0;
@@ -54,10 +86,17 @@ bool doApi(BUFFER_OBJ* bobj)
 	bobj->SetIoRequestFunction(API_ConnectCompFailed, API_ConnectCompSuccess);
 	a_sobj->pRelatedBObj = bobj;
 
+	a_sobj->nKey = GetRand();
+	a_sobj->dwTick = GetTickCount();
+	InsertConn(a_sobj);
+
 	if (!lpfnConnectEx(a_sobj->sock, (sockaddr*)sAddrInfo->ai_addr, sAddrInfo->ai_addrlen, bobj->data, bobj->dwRecvedCount, &dwBytes, &bobj->ol))
 	{
 		if (WSA_IO_PENDING != WSAGetLastError())
+		{
+			RemoveConn(a_sobj);
 			goto error;
+		}
 	}
 
 	return true;
@@ -81,6 +120,7 @@ void API_ConnectCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
+	RemoveConn(a_sobj);
 	FreeAddrInfo(a_sobj->sAddrInfo);
 
 	CSCloseSocket(a_sobj);
@@ -97,6 +137,7 @@ void API_ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
+	RemoveConn(a_sobj);
 	FreeAddrInfo(a_sobj->sAddrInfo);
 
 	c_bobj->dwSendedCount += dwTransion;
