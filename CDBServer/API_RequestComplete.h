@@ -2,8 +2,8 @@
 
 bool doApi(BUFFER_OBJ* bobj);
 
-void ConnectCompFailed(void* _sobj, void* _bobj);
-void ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
+void API_ConnectCompFailed(void* _sobj, void* _bobj);
+void API_ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
 
 void API_SendCompFailed(void* _sobj, void* _bobj);
 void API_SendCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);

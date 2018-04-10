@@ -51,7 +51,7 @@ bool doApi(BUFFER_OBJ* bobj)
 	if (NULL == CreateIoCompletionPort((HANDLE)a_sobj->sock, hCompPort, (ULONG_PTR)a_sobj, 0))
 		goto error;
 
-	bobj->SetIoRequestFunction(ConnectCompFailed, ConnectCompSuccess);
+	bobj->SetIoRequestFunction(API_ConnectCompFailed, API_ConnectCompSuccess);
 	a_sobj->pRelatedBObj = bobj;
 
 	if (!lpfnConnectEx(a_sobj->sock, (sockaddr*)sAddrInfo->ai_addr, sAddrInfo->ai_addrlen, bobj->data, bobj->dwRecvedCount, &dwBytes, &bobj->ol))
@@ -76,7 +76,7 @@ error:
 	return false;
 }
 
-void ConnectCompFailed(void* _sobj, void* _bobj)
+void API_ConnectCompFailed(void* _sobj, void* _bobj)
 {
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
@@ -89,10 +89,10 @@ void ConnectCompFailed(void* _sobj, void* _bobj)
 	API_Failed(c_bobj);
 }
 
-void ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
+void API_ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 {
 	if (dwTransion <= 0)
-		return ConnectCompFailed(_sobj, _bobj);
+		return API_ConnectCompFailed(_sobj, _bobj);
 
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
