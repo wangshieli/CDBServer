@@ -151,9 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="API_RequestComplete.h" />
     <ClInclude Include="Database_map.h" />
     <ClInclude Include="DBPool.h" />
     <ClInclude Include="DealHeadTail.h" />
+    <ClInclude Include="doCardStatus.h" />
+    <ClInclude Include="doDisabledNumber.h" />
     <ClInclude Include="doDxzhData.h" />
     <ClInclude Include="doKhData.h" />
     <ClInclude Include="doKhjlData.h" />
@@ -174,10 +177,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="API_RequestComplete.cpp" />
     <ClCompile Include="CDBServer.cpp" />
     <ClCompile Include="Database_map.cpp" />
     <ClCompile Include="DBPool.cpp" />
     <ClCompile Include="DealHeadTail.cpp" />
+    <ClCompile Include="doCardStatus.cpp" />
+    <ClCompile Include="doDisabledNumber.cpp" />
     <ClCompile Include="doDxzhData.cpp" />
     <ClCompile Include="doKhData.cpp" />
     <ClCompile Include="doKhjlData.cpp" />

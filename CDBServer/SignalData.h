@@ -17,6 +17,8 @@ public:
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;
 	DWORD dwSendedCount;
+	int nCmd;
+	int nSubCmd;
 	int datalen;
 	TCHAR data[1];
 
@@ -30,6 +32,8 @@ public:
 		ReleaseRecorder();
 		dwRecvedCount = 0;
 		dwSendedCount = 0;
+		nCmd = 0;
+		nSubCmd = 0;
 		datalen = usefull_space;
 		memset(data, 0x00, usefull_space);
 	}
@@ -64,6 +68,8 @@ public:
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;
 	DWORD dwSendedCount;
+	int nCmd;
+	int nSubCmd;
 	int datalen;
 	//	TCHAR data[1];
 }BUFFER_OBJ_T;
@@ -74,12 +80,14 @@ typedef struct _socket_obj
 public:
 	SOCKET sock;
 	struct _buffer_obj* pRelatedBObj;
+	ADDRINFOT *sAddrInfo;
 	int nKey;
 public:
 	void init()
 	{
 		sock = INVALID_SOCKET;
 		pRelatedBObj = NULL;
+		sAddrInfo = NULL;
 		nKey = 0;
 	}
 }SOCKET_OBJ;
@@ -135,6 +143,7 @@ int GetRand();
 
 extern LPFN_ACCEPTEX lpfnAccpetEx;
 extern LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockaddrs;
+extern LPFN_CONNECTEX lpfnConnectEx;
 
 extern HANDLE hCompPort;
 extern DWORD g_dwPageSize;

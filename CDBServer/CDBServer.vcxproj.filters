@@ -55,6 +55,15 @@
     <Filter Include="业务处理\Ssdq操作">
       <UniqueIdentifier>{8788e7ae-99bf-4814-8968-1ecaeea79e53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="业务处理\API">
+      <UniqueIdentifier>{469fc4b0-fd30-4382-9b31-3347215b1e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\API\停复机操作">
+      <UniqueIdentifier>{0e1385b3-eea5-4e9e-95f9-105ad8e691bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\API\状态查询">
+      <UniqueIdentifier>{f71183f9-e544-48f7-b10b-30d78b86802a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -120,6 +129,15 @@
     <ClInclude Include="doSsdqData.h">
       <Filter>业务处理\Ssdq操作</Filter>
     </ClInclude>
+    <ClInclude Include="doDisabledNumber.h">
+      <Filter>业务处理\API\停复机操作</Filter>
+    </ClInclude>
+    <ClInclude Include="API_RequestComplete.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="doCardStatus.h">
+      <Filter>业务处理\API\状态查询</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -184,6 +202,15 @@
     </ClCompile>
     <ClCompile Include="doSsdqData.cpp">
       <Filter>业务处理\Ssdq操作</Filter>
+    </ClCompile>
+    <ClCompile Include="doDisabledNumber.cpp">
+      <Filter>业务处理\API\停复机操作</Filter>
+    </ClCompile>
+    <ClCompile Include="API_RequestComplete.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="doCardStatus.cpp">
+      <Filter>业务处理\API\状态查询</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

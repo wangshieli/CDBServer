@@ -2,10 +2,12 @@
 #include "InitWinsock.h"
 
 GUID GuidAcceptEx = WSAID_ACCEPTEX,
-GuidGetAcceptExSockaddrs = WSAID_GETACCEPTEXSOCKADDRS;
+GuidGetAcceptExSockaddrs = WSAID_GETACCEPTEXSOCKADDRS,
+GuidConnectEx = WSAID_CONNECTEX;
 
 LPFN_ACCEPTEX lpfnAccpetEx = NULL;
 LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockaddrs = NULL;
+LPFN_CONNECTEX lpfnConnectEx = NULL;
 
 bool InitWinsock2()
 {
@@ -42,6 +44,13 @@ bool GetExtensionFunctionPointer()
 	rtErr = WSAIoctl(sTemp, SIO_GET_EXTENSION_FUNCTION_POINTER,
 		&GuidAcceptEx, sizeof(GuidAcceptEx),
 		&lpfnAccpetEx, sizeof(lpfnAccpetEx),
+		&dwBytes, NULL, NULL);
+	if (SOCKET_ERROR == rtErr)
+		goto error;
+
+	rtErr = WSAIoctl(sTemp, SIO_GET_EXTENSION_FUNCTION_POINTER,
+		&GuidConnectEx, sizeof(GuidConnectEx),
+		&lpfnConnectEx, sizeof(lpfnConnectEx),
 		&dwBytes, NULL, NULL);
 	if (SOCKET_ERROR == rtErr)
 		goto error;
