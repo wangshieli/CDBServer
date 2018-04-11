@@ -22,7 +22,7 @@ public:
 	DWORD dwSendedCount;
 	int nCmd;
 	int nSubCmd;
-	std::string strJrhm;
+	std::string strJrhm;// 使用jrhm时保存jrhm，使用iccid时保存iccid
 	int datalen;
 	TCHAR data[1];
 
@@ -39,6 +39,7 @@ public:
 		dwSendedCount = 0;
 		nCmd = 0;
 		nSubCmd = 0;
+		strJrhm = "";
 		datalen = usefull_space;
 		memset(data, 0x00, usefull_space);
 	}

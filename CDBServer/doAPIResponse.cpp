@@ -185,8 +185,10 @@ bool doDisNumberResponse(void* _bobj)
 	{
 		// 不是XML格式的数据
 		_tprintf(_T("%s\n"), pResponData);
+		delete pResponData;
 		return false;
 	}
+	delete pResponData;
 
 	tinyxml2::XMLElement* RootElment = doc.FirstChildElement("businessServiceResponse");
 	if (NULL == RootElment)

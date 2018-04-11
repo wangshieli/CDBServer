@@ -12,6 +12,7 @@
 #include "doDxzhData.h"
 #include "ExcelLoad.h"
 #include "doSsdqData.h"
+#include "doDisabledNumber.h"
 
 int ProcessCommand(BUFFER_OBJ* bobj)
 {
@@ -81,6 +82,10 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 			doSsdqData(result_, bobj);
 		}
 		break;
+		case DISABLE_NUMBER_DATA:
+		{
+			doDisabledNumber(result_, bobj);
+		}
 		default:
 			break;
 		}
