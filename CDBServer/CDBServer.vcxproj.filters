@@ -64,6 +64,9 @@
     <Filter Include="业务处理\API\状态查询">
       <UniqueIdentifier>{f71183f9-e544-48f7-b10b-30d78b86802a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{0cde3a3d-8053-4b48-a05c-a22f7a310862}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -138,6 +141,12 @@
     <ClInclude Include="doCardStatus.h">
       <Filter>业务处理\API\状态查询</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="doAPIResponse.h">
+      <Filter>业务处理\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -211,6 +220,12 @@
     </ClCompile>
     <ClCompile Include="doCardStatus.cpp">
       <Filter>业务处理\API\状态查询</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="doAPIResponse.cpp">
+      <Filter>业务处理\API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

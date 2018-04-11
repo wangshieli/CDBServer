@@ -1,7 +1,5 @@
 #pragma once
 
-bool doApi(BUFFER_OBJ* bobj);
-
 void API_ConnectCompFailed(void* _sobj, void* _bobj);
 void API_ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
 
@@ -16,8 +14,3 @@ void API_RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
 
 void API_CheckRecvFailed(void* _sobj, void* _bobj);
 void API_CheckRecvSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
-
-void DoReturnData(BUFFER_OBJ* bobj);
-
-void API_Failed(BUFFER_OBJ* bobj);
-void API_Successed(BUFFER_OBJ* bobj);
