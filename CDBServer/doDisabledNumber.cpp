@@ -5,6 +5,7 @@
 #include "MemPool.h"
 #include "API_RequestComplete.h"
 #include "RequestPost.h"
+#include "doAPIResponse.h"
 
 bool doDisabledNumber(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {

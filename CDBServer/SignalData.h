@@ -6,12 +6,15 @@ using namespace tbb;
 typedef void(*PTIoRequestSuccess)(DWORD dwTranstion, void* key, void* buf);
 typedef void(*PTIoRequestFailed)(void* key, void* buf);
 
+typedef bool(*PTAPIResponse)(void* bobj);
+
 typedef struct _buffer_obj
 {
 public:
 	WSAOVERLAPPED ol;
 	PTIoRequestFailed pfnFailed;
 	PTIoRequestSuccess pfnSuccess;
+	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
 	WSABUF wsaBuf;
@@ -28,6 +31,7 @@ public:
 		memset(&ol, 0x00, sizeof(ol));
 		pfnFailed = NULL;
 		pfnSuccess = NULL;
+		pfndoApiResponse = NULL;
 		pRelatedSObj = NULL;
 		ReleaseRecorder();
 		dwRecvedCount = 0;
@@ -63,6 +67,7 @@ public:
 	WSAOVERLAPPED ol;
 	PTIoRequestFailed pfnFailed;
 	PTIoRequestSuccess pfnSuccess;
+	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
 	WSABUF wsaBuf;
