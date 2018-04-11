@@ -38,7 +38,37 @@ bool doDxzhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			goto error;
 		}
 
-		goto success;
+		pSql = _T("SELECT id,dxzh,userid,pwd,skey,bz,xgsj FROM dxzh_tbl WHERE dxzh='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strDxzh.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+		_msgpack.pack_array(7);
+		_variant_t var;
+		var = bobj->pRecorder->GetCollect("id");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("dxzh");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("userid");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("pwd");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("skey");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("bz");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("xgsj");
+		PackCollectDate(_msgpack, var);
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 
@@ -107,12 +137,4 @@ error:
 	_msgpack.pack(1);
 	DealTail(sbuf, bobj);
 	return false;
-
-success:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(0);
-	DealTail(sbuf, bobj);
-	return true;
 }
