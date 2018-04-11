@@ -1,0 +1,73 @@
+int* strToBt(string str)
+{
+	int leng = str.length();
+	int* bt = new int[64];
+	if (leng < 4)
+	{
+		int i = 0, j = 0, p = 0, q = 0;
+		for (i = 0; i < leng; i++)
+		{
+			int k = str[i];
+			for (j = 0; j < 16; j++)
+			{
+				int pow = 1, m = 0;
+				for (m = 15; m > j; m--)
+				{
+					pow *= 2;
+				}
+				bt[16 * i + j] = (k / pow) % 2;
+			}
+		}
+		for (p = 0; p < 4; p++)
+		{
+			int k = 0;
+			for (q = 0; q < 16; q++)
+			{
+				int pow = 1, m = 0;
+				for (m = 15; m > q; m--)
+				{
+					pow *= 2;
+				}
+				bt[16 * p + q] = (k / pow) % 2;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int k = str[i];
+			for (int j = 0; j < 16; j++)
+			{
+				int pow = 1;
+				for (int m = 15; m > j; m--)
+				{
+					pow *= 2;
+				}
+				bt[16 * i + j] = (k / pow) % 2;
+			}
+		}
+	}
+	return bt;
+}
+
+int** getKeyBytes(const char* key)
+{
+	string str = "123456789";
+	int* KeyBytes[100] = { 0 };
+	int leng = str.length();
+	int iterator = leng / 4;
+	int remainder = leng % 4;
+
+	int i = 0;
+	for (i = 0; i < iterator; i++)
+	{
+		KeyBytes[i] = strToBt(str.substr(i * 4 + 0, (i * 4 + 4) - (i * 4 + 0)));
+	}
+	if (remainder > 0)
+		KeyBytes[i] = strToBt(str.substr(i * 4 + 0, leng - (i * 4 + 0)));
+
+	cout << str.substr(3, 6) << endl;
+
+	return KeyBytes;
+}
