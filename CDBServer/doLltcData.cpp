@@ -35,7 +35,30 @@ bool doLltcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			goto error;
 		}
 
-		goto success;
+		pSql = _T("SELECT id,tcmc,tcfl,xgsj FROM lltc_tbl WHERE tcmc='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strTcmc.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+		_msgpack.pack_array(4);
+		_variant_t var;
+		var = bobj->pRecorder->GetCollect("id");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("tcmc");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("tcfl");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("xgsj");
+		PackCollectDate(_msgpack, var);
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 
@@ -98,12 +121,4 @@ error:
 	_msgpack.pack(1);
 	DealTail(sbuf, bobj);
 	return false;
-
-success:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(0);
-	DealTail(sbuf, bobj);
-	return true;
 }

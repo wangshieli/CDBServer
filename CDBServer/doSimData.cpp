@@ -38,7 +38,52 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			goto error;
 		}
 
-		goto success;
+		pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl WHERE jrhm='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strJrhm.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+
+		_msgpack.pack_array(14);
+		_variant_t var;
+		var = bobj->pRecorder->GetCollect("id");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("jrhm");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("iccid");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("dxzh");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("khmc");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("llchm");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("llclx");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("dj");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("xsrq");
+		PackCollectDate(_msgpack, var, false);
+		var = bobj->pRecorder->GetCollect("jhrq");
+		PackCollectDate(_msgpack, var, false);
+		var = bobj->pRecorder->GetCollect("xfrq");
+		PackCollectDate(_msgpack, var, false);
+		var = bobj->pRecorder->GetCollect("dqrq");
+		PackCollectDate(_msgpack, var, false);
+		var = bobj->pRecorder->GetCollect("zxrq");
+		PackCollectDate(_msgpack, var, false);
+		var = bobj->pRecorder->GetCollect("bz");
+		PackCollectDate(_msgpack, var);
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 
@@ -50,7 +95,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl ");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -177,12 +222,4 @@ error:
 	_msgpack.pack(1);
 	DealTail(sbuf, bobj);
 	return false;
-
-success:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(0);
-	DealTail(sbuf, bobj);
-	return true;
 }

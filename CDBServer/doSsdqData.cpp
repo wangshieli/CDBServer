@@ -34,7 +34,29 @@ bool doSsdqData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			goto error;
 		}
 
-		goto success;
+		pSql = _T("SELECT id,ssdq,xgsj FROM ssdq_tbl WHERE ssdq='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strSsdq.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+		_msgpack.pack_array(3);
+		_variant_t var;
+		var = bobj->pRecorder->GetCollect("id");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("ssdq");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("xgsj");
+		PackCollectDate(_msgpack, var);
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 
@@ -46,7 +68,7 @@ bool doSsdqData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,ssdq,xgsj FROM ssdq_tbl ");
+			const TCHAR* pSql = _T("SELECT id,ssdq,xgsj FROM ssdq_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				goto error;
@@ -95,12 +117,4 @@ error:
 	_msgpack.pack(1);
 	DealTail(sbuf, bobj);
 	return false;
-
-success:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(0);
-	DealTail(sbuf, bobj);
-	return true;
 }

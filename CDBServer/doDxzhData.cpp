@@ -63,9 +63,9 @@ bool doDxzhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("skey");
 		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("bz");
-		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("xgsj");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("bz");
 		PackCollectDate(_msgpack, var);
 
 		DealTail(sbuf, bobj);

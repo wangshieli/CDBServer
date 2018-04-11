@@ -22,6 +22,7 @@ public:
 	DWORD dwSendedCount;
 	int nCmd;
 	int nSubCmd;
+	std::string strJrhm;
 	int datalen;
 	TCHAR data[1];
 
@@ -75,6 +76,7 @@ public:
 	DWORD dwSendedCount;
 	int nCmd;
 	int nSubCmd;
+	std::string strJrhm;
 	int datalen;
 	//	TCHAR data[1];
 }BUFFER_OBJ_T;

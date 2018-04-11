@@ -22,22 +22,49 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
-		std::string strKhmc = (pDataObj++)->as<std::string>();
-		std::string strLxfs = (pDataObj++)->as<std::string>();
-		std::string strJlxm = (pDataObj++)->as<std::string>();
+		std::string strLlchm = (pDataObj++)->as<std::string>();
+		std::string strLlclx= (pDataObj++)->as<std::string>();
+		std::string strDxzh = (pDataObj++)->as<std::string>();
 		std::string strBz = (pDataObj++)->as<std::string>();
 
 		const TCHAR* pSql = _T("INSERT INTO llc_tbl (id,llchm,llclx,dxzh,bz,xgsj) VALUES(null,'%s','%s','%s','%s',now())");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strLxfs.c_str(), strJlxm.c_str(), strBz.c_str());
+		_stprintf_s(sql, 256, pSql, strLlchm.c_str(), strLlclx.c_str(), strDxzh.c_str(), strBz.c_str());
 
 		if (!ExecuteSql(sql))
 		{
 			goto error;
 		}
 
-		goto success;
+		pSql = _T("SELECT id,llchm,llclx,dxzh,bz,xgsj FROM llc_tbl WHERE llchm='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, 256, pSql, strLlchm.c_str());
+		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		{
+			goto error;
+		}
+		_msgpack.pack_array(4);
+		_msgpack.pack(nCmd);
+		_msgpack.pack(nSubCmd);
+		_msgpack.pack(0);
+		_msgpack.pack_array(1);
+		_msgpack.pack_array(6);
+		_variant_t var;
+		var = bobj->pRecorder->GetCollect("id");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("llchm");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("llclx");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("dxzh");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("xgsj");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("bz");
+		PackCollectDate(_msgpack, var);
+
+		DealTail(sbuf, bobj);
 	}
 	break;
 
@@ -104,12 +131,4 @@ error:
 	_msgpack.pack(1);
 	DealTail(sbuf, bobj);
 	return false;
-
-success:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(0);
-	DealTail(sbuf, bobj);
-	return true;
 }
