@@ -168,7 +168,7 @@ void DoReturnData(BUFFER_OBJ* bobj)
 	}
 }
 
-bool doDisNumberResponse(BUFFER_OBJ* bobj)
+bool doDisNumberResponse(void* _bobj)
 {
 	//static const char* test = "<?xml version = \"1.0\" encoding = \"utf-8\"?>"
 	//	"<businessServiceResponse>" // 业务根节点
@@ -178,6 +178,7 @@ bool doDisNumberResponse(BUFFER_OBJ* bobj)
 	//	"<GROUP_TRANSACTIONID>1000000252201606149170517340</GROUP_TRANSACTIONID>" // 流水号 请求流水
 	//	"</businessServiceResponse>";
 
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
 	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
 	tinyxml2::XMLDocument doc;
 	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))

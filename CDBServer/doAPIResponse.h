@@ -13,4 +13,4 @@ TCHAR* Utf8ConvertAnsi(const TCHAR* strIn, int inLen);
 
 void DoReturnData(BUFFER_OBJ* bobj);
 
-bool doDisNumberResponse(BUFFER_OBJ* bobj);
+bool doDisNumberResponse(void* bobj);
