@@ -40,9 +40,9 @@ bool doExcelLoad(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 				std::string strIccid = (pDataObj++)->as<std::string>();
 				std::string strDxzh = (pDataObj++)->as<std::string>();
 				TCHAR sql[256];
-				const TCHAR* pSql = _T("insert into sim_tbl (id,jrhm,iccid,dxzh,llc,tag) value(null,'%s','%s','%s','%s',true) ON DUPLICATE KEY UPDATE iccid='%s'");
+				const TCHAR* pSql = _T("insert into sim_tbl (id,jrhm,iccid,dxzh,llchm,llclx) value(null,'%s','%s','%s','%s','%s') ON DUPLICATE KEY UPDATE iccid='%s'");
 				memset(sql, 0x00, sizeof(sql));
-				_stprintf_s(sql, 256, pSql, strJrhm.c_str(), strIccid.c_str(), strDxzh.c_str(), llchm.c_str(), strIccid.c_str());
+				_stprintf_s(sql, 256, pSql, strJrhm.c_str(), strIccid.c_str(), strDxzh.c_str(), llchm.c_str(), llclx.c_str(), strIccid.c_str());
 				(*pConner)->Execute(_bstr_t(sql), &EffectedRecCount, adCmdText);
 			}
 			(*pConner)->CommitTrans();

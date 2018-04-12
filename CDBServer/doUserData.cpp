@@ -34,14 +34,14 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!ExecuteSql(sql))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 		pSql = _T("SELECT id,authority,dj FROM user_tbl where username='%s' and password='%s'");
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -73,7 +73,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -97,29 +97,19 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		if (!bobj->pRecorder)
 		{
 			const TCHAR* pSql = _T("SELECT id,username,authority,dj,xgsj FROM user_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
@@ -147,12 +137,4 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	}
 
 	return true;
-
-error:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(1);
-	DealTail(sbuf, bobj);
-	return false;
 }

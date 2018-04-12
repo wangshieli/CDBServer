@@ -23,27 +23,35 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strJrhm = (pDataObj++)->as<std::string>();
-		std::string strIccid = (pDataObj++)->as<std::string>();
 		std::string strDxzh = (pDataObj++)->as<std::string>();
-		std::string strLlchm = (pDataObj++)->as<std::string>();
-		std::string strLlclx = (pDataObj++)->as<std::string>();
+		std::string stKhmc = (pDataObj++)->as<std::string>();
+		std::string strJlxm = (pDataObj++)->as<std::string>();
+		std::string strXsrq = (pDataObj++)->as<std::string>();
+		std::string strJhrq = (pDataObj++)->as<std::string>();
+		std::string strXfrq = (pDataObj++)->as<std::string>();
+		std::string strDqrq = (pDataObj++)->as<std::string>();
+		std::string strZxrq = (pDataObj++)->as<std::string>();
+		std::string strBz = (pDataObj++)->as<std::string>();
+		double dj = (pDataObj++)->as<double>();
 
-		const TCHAR* pSql = _T("INSERT INTO sim_tbl (id,jrhm,iccid,llchm,llclx,dxzh) VALUES(null,'%s','%s','%s','%s','%s') ON DUPLICATE KEY UPDATE iccid='%s'");
+//		const TCHAR* pSql = _T("INSERT INTO sim_tbl (id,jrhm,iccid,dxzh,khmc,jlxm,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz) \
+//VALUES(null,'%s','%s','%s','%s','%s') ON DUPLICATE KEY UPDATE iccid='%s',jrhm='%s',dxzh='%s'");
+		const TCHAR* pSql = _T("UPDATE sim_tbl SET khmc='%s',jlxm='%s',dj='%lf',xsrq='%s',jhrq='%s',xfrq='%s',dqrq='%s',zxrq='%s',bz='%s' WHERE jrhm='%s'");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strJrhm.c_str(), strIccid.c_str(), strLlchm.c_str(), strLlclx.c_str(), strDxzh.c_str());
+		_stprintf_s(sql, 256, pSql, stKhmc.c_str(), strJlxm.c_str(), dj, strXsrq.c_str(), strJhrq.c_str(), strXfrq.c_str(), strDqrq.c_str(), strZxrq.c_str(), strBz.c_str(), strJrhm.c_str());
 
 		if (!ExecuteSql(sql))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
-		pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl WHERE jrhm='%s'");
+		pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl WHERE jrhm='%s'");
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strJrhm.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -52,7 +60,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
 
-		_msgpack.pack_array(14);
+		_msgpack.pack_array(16);
 		_variant_t var;
 		var = bobj->pRecorder->GetCollect("id");
 		PackCollectDate(_msgpack, var);
@@ -63,6 +71,10 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		var = bobj->pRecorder->GetCollect("dxzh");
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("khmc");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("jlxm");
+		PackCollectDate(_msgpack, var);
+		var = bobj->pRecorder->GetCollect("zt");
 		PackCollectDate(_msgpack, var);
 		var = bobj->pRecorder->GetCollect("llchm");
 		PackCollectDate(_msgpack, var);
@@ -91,33 +103,23 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,zt,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(14);
+			_msgpack.pack_array(16);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("jrhm");
@@ -127,6 +129,10 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			var = bobj->pRecorder->GetCollect("dxzh");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("khmc");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jlxm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("zt");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
@@ -166,7 +172,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_stprintf_s(sql, 256, pSql, strJrhm.c_str());
 		if (!Select_From_Tbl(pSql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -214,12 +220,4 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	}
 
 	return true;
-
-error:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(1);
-	DealTail(sbuf, bobj);
-	return false;
 }

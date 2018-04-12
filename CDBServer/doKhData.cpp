@@ -34,15 +34,15 @@ bool doKhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!ExecuteSql(sql))
 		{
-			goto error;
-		}
+			return ErrorInfo(sbuf, _msgpack, bobj);
+;		}
 
 		pSql = _T("SELECT id,khmc,lxfs,jlxm,xgsj,bz FROM kh_tbl WHERE khmc='%s'");
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strKhmc.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -89,7 +89,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{
-			goto error;
+			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
 		_msgpack.pack_array(4);
@@ -124,7 +124,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
@@ -138,22 +137,13 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str());
 			if (!Select_From_Tbl(sql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 		
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
@@ -174,29 +164,19 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		if (!bobj->pRecorder)
 		{
 			const TCHAR* pSql = _T("SELECT id,khmc,lxfs,jlxm,xgsj,bz FROM kh_tbl ");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
@@ -225,7 +205,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
@@ -239,22 +218,13 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str());
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
@@ -299,7 +269,6 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
-		int nStart = (nTag - 1) * nPage;
 
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
@@ -314,22 +283,13 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strXsrq.c_str());
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
-				goto error;
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
+			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
 		}
 
-		int lRstCount = bobj->pRecorder->GetRecordCount();
-		_msgpack.pack_array(6);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
-		_msgpack.pack(nTag);
-		_msgpack.pack(0);
-		_msgpack.pack(lRstCount);
-
-		int nTemp = lRstCount - nStart;
-		_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
 		_variant_t var;
-		bobj->pRecorder->Move(nStart);
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
@@ -374,12 +334,4 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	}
 
 	return true;
-
-error:
-	_msgpack.pack_array(3);
-	_msgpack.pack(nCmd);
-	_msgpack.pack(nSubCmd);
-	_msgpack.pack(1);
-	DealTail(sbuf, bobj);
-	return false;
 }

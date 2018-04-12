@@ -60,8 +60,8 @@ void DealTail(msgpack::sbuffer& sBuf, BUFFER_OBJ* bobj)
 {
 	char* pCh = sBuf.data();
 	int nLen = sBuf.size();
-	byte pData[1024 * 10];
-	memset(pData, 0, 1024 * 10);
+	byte pData[1024 * 32];
+	memset(pData, 0, 1024 * 32);
 	memcpy(pData, pCh + 6, nLen - 6);
 	byte nSum = csum(pData, nLen - 6);
 	sBuf.write("\x00", 1);
@@ -148,4 +148,42 @@ void PackCollectDate(msgpack::packer<msgpack::sbuffer>& _msgpack, const _variant
 	default:
 		break;
 	}
+}
+
+bool ErrorInfo(msgpack::sbuffer& sBuf, msgpack::packer<msgpack::sbuffer>& _msgpack, BUFFER_OBJ* bobj, int nTag/* = 0*/)
+{
+	if (nTag == 0)
+	{
+		_msgpack.pack_array(3);
+		_msgpack.pack(bobj->nCmd);
+		_msgpack.pack(bobj->nSubCmd);
+		_msgpack.pack(1);
+	}
+	else
+	{
+		_msgpack.pack_array(5);
+		_msgpack.pack(bobj->nCmd);
+		_msgpack.pack(bobj->nSubCmd);
+		_msgpack.pack(nTag);
+		_msgpack.pack(1);
+		_msgpack.pack(0);
+	}
+
+	DealTail(sBuf, bobj);
+	return false;
+}
+
+void InitMsgpack(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder, BUFFER_OBJ* bobj, int nPage, int nTag)
+{
+	_msgpack.pack_array(6);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(nTag);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->nRecSetCount);
+
+	int nStart = (nTag - 1) * nPage;
+	int nTemp = bobj->nRecSetCount - nStart;
+	_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+	bobj->pRecorder->Move(nStart, _variant_t((long)adBookmarkFirst));
 }
