@@ -11,12 +11,9 @@ bool doCardStatus(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
-	int nSubCmd = (pObj++)->as<int>();
+	bobj->nSubCmd = (pObj++)->as<int>();
 
-	bobj->nCmd = CARD_STATUS_DATA;
-	bobj->nSubCmd = nSubCmd;
-
-	switch (nSubCmd)
+	switch (bobj->nSubCmd)
 	{
 	case CS_QUERY_JRHM:
 	{

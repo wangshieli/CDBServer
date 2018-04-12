@@ -7,16 +7,15 @@
 
 bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
-	int nCmd = SIM_DATA;
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
-	int nSubCmd = (pObj++)->as<int>();
+	bobj->nSubCmd = (pObj++)->as<int>();
 
 	msgpack::sbuffer sbuf;
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	switch (nSubCmd)
+	switch (bobj->nSubCmd)
 	{
 	case SIM_ADD:
 	{
@@ -55,8 +54,8 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		}
 
 		_msgpack.pack_array(4);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
+		_msgpack.pack(bobj->nCmd);
+		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
 
@@ -176,8 +175,8 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		}
 
 		_msgpack.pack_array(4);
-		_msgpack.pack(nCmd);
-		_msgpack.pack(nSubCmd);
+		_msgpack.pack(bobj->nCmd);
+		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
 		_msgpack.pack_array(14);

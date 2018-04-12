@@ -20,7 +20,6 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 	if (!(nFrameLen = DealHead(bobj)))
 		return false;
 
-	int nCmd = 0;
 	try
 	{
 		msgpack::unpacker unpack_;
@@ -33,9 +32,9 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 		{
 			goto error;
 		}
-		nCmd = result_.get().via.array.ptr->as<int>();
+		bobj->nCmd = result_.get().via.array.ptr->as<int>();
 
-		switch (nCmd)
+		switch (bobj->nCmd)
 		{
 		case USER_DATA:
 		{
@@ -106,12 +105,12 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 error:
 	msgpack::sbuffer sbuf;
 	msgpack::packer<msgpack::sbuffer> msgPack(&sbuf);
-	nCmd = 0xbb;
-	int nSubCmd = 0xbb;
+	bobj->nCmd = 0xbb;
+	bobj->nSubCmd = 0xbb;
 	sbuf.write("\xfb\xfc", 6);
 	msgPack.pack_array(3);
-	msgPack.pack(nCmd);
-	msgPack.pack(nSubCmd);
+	msgPack.pack(bobj->nCmd);
+	msgPack.pack(bobj->nSubCmd);
 	msgPack.pack(0);
 
 	DealTail(sbuf, bobj);

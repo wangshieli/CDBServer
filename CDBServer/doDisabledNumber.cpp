@@ -11,13 +11,10 @@ bool doDisabledNumber(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
-	int nSubCmd = (pObj++)->as<int>();
-
-	bobj->nCmd = DISABLE_NUMBER_DATA;
-	bobj->nSubCmd = nSubCmd;
+	bobj->nSubCmd = (pObj++)->as<int>();
 	bobj->pfndoApiResponse = doDisNumberResponse;
 
-	switch (nSubCmd)
+	switch (bobj->nSubCmd)
 	{
 	case DN_DISABLE:
 	{
