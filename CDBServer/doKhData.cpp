@@ -211,7 +211,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s'");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,zt,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str());
@@ -227,7 +227,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(14);
+			_msgpack.pack_array(16);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("jrhm");
@@ -237,6 +237,10 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			var = bobj->pRecorder->GetCollect("dxzh");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("khmc");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jlxm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("zt");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
@@ -276,7 +280,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s' and xsrq='%s'");
+			const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,zt,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl where khmc='%s' and xsrq='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strXsrq.c_str());
@@ -292,7 +296,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(14);
+			_msgpack.pack_array(16);
 			var = bobj->pRecorder->GetCollect("id");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("jrhm");
@@ -302,6 +306,10 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			var = bobj->pRecorder->GetCollect("dxzh");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("khmc");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("jlxm");
+			PackCollectDate(_msgpack, var);
+			var = bobj->pRecorder->GetCollect("zt");
 			PackCollectDate(_msgpack, var);
 			var = bobj->pRecorder->GetCollect("llchm");
 			PackCollectDate(_msgpack, var);
