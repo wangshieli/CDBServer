@@ -80,7 +80,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strJlxm.c_str());
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			if (!Select_From_Tbl(sql, bobj->pRecorder))
 			{
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
@@ -208,7 +208,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strJlxm.c_str(), strXsrq.c_str());
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			if (!Select_From_Tbl(sql, bobj->pRecorder))
 			{
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}

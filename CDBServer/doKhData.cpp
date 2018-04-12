@@ -215,7 +215,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str());
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			if (!Select_From_Tbl(sql, bobj->pRecorder))
 			{
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
@@ -280,7 +280,7 @@ LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			TCHAR sql[256];
 			memset(sql, 0x00, sizeof(sql));
 			_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strXsrq.c_str());
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			if (!Select_From_Tbl(sql, bobj->pRecorder))
 			{
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
