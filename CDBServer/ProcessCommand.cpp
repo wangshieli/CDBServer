@@ -99,6 +99,12 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 		_tprintf(_T("解析错误: %s\n"), e.what());
 		goto error;
 	}
+	catch (_com_error e)
+	{
+		_tprintf(_T("%s-%d:错误信息:%s 错误代码:%08lx 错误源:%s 错误描述:%s\n"), __FILE__, __LINE__,
+			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
+		goto error;
+	}
 
 	return true;
 
