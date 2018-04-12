@@ -4,6 +4,7 @@
 #include "doSimData.h"
 #include "DBPool.h"
 #include "DealHeadTail.h"
+#include "doDataParser.h"
 
 bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
@@ -59,40 +60,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
 
-		_msgpack.pack_array(16);
-		_variant_t var;
-		var = bobj->pRecorder->GetCollect("id");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("jrhm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("iccid");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("dxzh");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("khmc");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("jlxm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("zt");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llchm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llclx");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("dj");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("xsrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("jhrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("xfrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("dqrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("zxrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("bz");
-		PackCollectDate(_msgpack, var);
+		ParserSimData(_msgpack, bobj->pRecorder);
 
 		DealTail(sbuf, bobj);
 	}
@@ -114,43 +82,10 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		}
 
 		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
-		_variant_t var;
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(16);
-			var = bobj->pRecorder->GetCollect("id");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("jrhm");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("iccid");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("dxzh");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("khmc");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("jlxm");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("zt");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llchm");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llclx");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("dj");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("xsrq");
-			PackCollectDate(_msgpack, var, false);
-			var = bobj->pRecorder->GetCollect("jhrq");
-			PackCollectDate(_msgpack, var, false);
-			var = bobj->pRecorder->GetCollect("xfrq");
-			PackCollectDate(_msgpack, var, false);
-			var = bobj->pRecorder->GetCollect("dqrq");
-			PackCollectDate(_msgpack, var, false);
-			var = bobj->pRecorder->GetCollect("zxrq");
-			PackCollectDate(_msgpack, var, false);
-			var = bobj->pRecorder->GetCollect("bz");
-			PackCollectDate(_msgpack, var);
+			ParserSimData(_msgpack, bobj->pRecorder);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
@@ -179,40 +114,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
-		_msgpack.pack_array(16);
-		_variant_t var;
-		var = bobj->pRecorder->GetCollect("id");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("jrhm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("iccid");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("dxzh");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("khmc");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("jlxm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("zt");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llchm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llclx");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("dj");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("xsrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("jhrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("xfrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("dqrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("zxrq");
-		PackCollectDate(_msgpack, var, false);
-		var = bobj->pRecorder->GetCollect("bz");
-		PackCollectDate(_msgpack, var);
+		ParserSimData(_msgpack, bobj->pRecorder);
 
 		DealTail(sbuf, bobj);
 	}

@@ -4,6 +4,7 @@
 #include "doLlcData.h"
 #include "DBPool.h"
 #include "DealHeadTail.h"
+#include "doDataParser.h"
 
 bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
@@ -48,20 +49,8 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
-		_msgpack.pack_array(6);
-		_variant_t var;
-		var = bobj->pRecorder->GetCollect("id");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llchm");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("llclx");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("dxzh");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("xgsj");
-		PackCollectDate(_msgpack, var);
-		var = bobj->pRecorder->GetCollect("bz");
-		PackCollectDate(_msgpack, var);
+
+		ParserLlcData(_msgpack, bobj->pRecorder);
 
 		DealTail(sbuf, bobj);
 	}
@@ -83,23 +72,10 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		}
 
 		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
-		_variant_t var;
 		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
 		while (!bRt && nPage--)
 		{
-			_msgpack.pack_array(6);
-			var = bobj->pRecorder->GetCollect("id");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llchm");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("llclx");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("dxzh");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("xgsj");
-			PackCollectDate(_msgpack, var);
-			var = bobj->pRecorder->GetCollect("bz");
-			PackCollectDate(_msgpack, var);
+			ParserLlcData(_msgpack, bobj->pRecorder);
 			bobj->pRecorder->MoveNext();
 			bRt = bobj->pRecorder->GetadoEOF();
 		}
