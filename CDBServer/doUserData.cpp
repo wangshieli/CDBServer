@@ -36,7 +36,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		{
 			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
-		pSql = _T("SELECT id,username,authority,dj,xgsj FROM user_tbl where username='%s' and password='%s'");
+		pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl where username='%s' and password='%s'");
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
@@ -61,7 +61,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strUserName = (pDataObj++)->as<std::string>();
 		std::string strUserPwd = (pDataObj++)->as<std::string>();
-		const TCHAR* pSql = _T("SELECT id,authority,dj FROM user_tbl WHERE username='%s' AND password='%s'");
+		const TCHAR* pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl WHERE username='%s' AND password='%s'");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
@@ -88,7 +88,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		if (!bobj->pRecorder)
 		{
-			const TCHAR* pSql = _T("SELECT id,username,authority,dj,xgsj FROM user_tbl");
+			const TCHAR* pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl");
 			if (!Select_From_Tbl(pSql, bobj->pRecorder))
 			{
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);

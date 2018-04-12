@@ -46,7 +46,7 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
 
-		pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl WHERE jrhm='%s'");
+		pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,zt,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl WHERE jrhm='%s'");
 		memset(sql, 0x00, sizeof(sql));
 		_stprintf_s(sql, 256, pSql, strJrhm.c_str());
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
