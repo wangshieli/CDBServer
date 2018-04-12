@@ -126,6 +126,7 @@ void API_Failed(BUFFER_OBJ* bobj)
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(1);
+	_msgpack.pack(bobj->strJrhm);
 
 	DealTail(sbuf, bobj);
 }

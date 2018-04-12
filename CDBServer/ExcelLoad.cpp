@@ -81,7 +81,7 @@ bool doExcelLoad(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 				std::string strXsy = (pDataObj++)->as<std::string>();
 				std::string strBz = (pDataObj++)->as<std::string>();
 				TCHAR sql[256];
-				const TCHAR* pSql = _T("update sim_tbl set khmc='%s',xsrq='%s',xsy='%s',bz='%s' where jrhm='%s'");
+				const TCHAR* pSql = _T("update sim_tbl set khmc='%s',xsrq='%s',jlxm='%s',bz='%s' where jrhm='%s'");
 				memset(sql, 0x00, sizeof(sql));
 				_stprintf_s(sql, 256, pSql, strKhmc.c_str(), strXsrq.c_str(), strXsy.c_str(), strBz.c_str(), strJrhm.c_str());
 				_variant_t EffectedRecCount;

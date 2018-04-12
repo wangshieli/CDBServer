@@ -1,4 +1,10 @@
 #pragma once
+#ifdef _DEBUG
+#import "..\..\WOTDes\WOTEDUtils\bin\Debug\WOTEDUtils.tlb"
+#else
+#import "..\..\WOTDes\WOTEDUtils\bin\Release\WOTEDUtils.tlb"
+#endif // _DEBUG
+using namespace WOTEDUtils;
 
 void InsertConn(SOCKET_OBJ* sobj);
 void RemoveConn(SOCKET_OBJ* sobj);
