@@ -2,9 +2,6 @@
 #include <msgpack.hpp>
 #include "SignalData.h"
 #include "doCardStatus.h"
-#include "MemPool.h"
-#include "API_RequestComplete.h"
-#include "RequestPost.h"
 #include "doAPIResponse.h"
 
 bool doCardStatus(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)

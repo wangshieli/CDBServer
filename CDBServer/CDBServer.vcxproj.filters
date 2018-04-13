@@ -70,6 +70,9 @@
     <Filter Include="业务处理\数据处理">
       <UniqueIdentifier>{022ab414-4457-4453-bc37-eb041998c4bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="业务处理\API\流量池列表查询">
+      <UniqueIdentifier>{9499fedb-ebf7-474d-b80d-0070f392c346}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="doDataParser.h">
       <Filter>业务处理\数据处理</Filter>
     </ClInclude>
+    <ClInclude Include="doPoolList.h">
+      <Filter>业务处理\API\流量池列表查询</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="doDataParser.cpp">
       <Filter>业务处理\数据处理</Filter>
+    </ClCompile>
+    <ClCompile Include="doPoolList.cpp">
+      <Filter>业务处理\API\流量池列表查询</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

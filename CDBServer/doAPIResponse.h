@@ -20,3 +20,5 @@ TCHAR* Utf8ConvertAnsi(const TCHAR* strIn, int inLen);
 void DoReturnData(BUFFER_OBJ* bobj);
 
 bool doDisNumberResponse(void* bobj);
+
+bool doPoolListResponse(void* bobj);

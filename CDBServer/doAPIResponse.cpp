@@ -141,6 +141,7 @@ void API_Successed(BUFFER_OBJ* bobj)
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(0);
+	_msgpack.pack(bobj->strJrhm);
 
 	DealTail(sbuf, bobj);
 }
@@ -165,20 +166,22 @@ void DoReturnData(BUFFER_OBJ* bobj)
 {
 	if (!bobj->pfndoApiResponse(bobj))
 	{
-		API_Failed(bobj);
+		return API_Failed(bobj);
 	}
+
+	return API_Successed(bobj);
 }
 
+
+//	static const char* test = "<?xml version = \"1.0\" encoding = \"utf-8\"?>"
+//	"<businessServiceResponse>" // 业务根节点
+//		"<RspType>0</RspType>"	// 请求状态 返回0，标识请求成功
+//		"<result>0</result>"	// 状态响应码 返回0，标识成功接收消息
+//		"<resultMsg>成功接收消息</resultMsg>"	// 返回消息信息
+//		"<GROUP_TRANSACTIONID>1000000252201606149170517340</GROUP_TRANSACTIONID>" // 流水号 请求流水
+//	"</businessServiceResponse>";
 bool doDisNumberResponse(void* _bobj)
 {
-	//static const char* test = "<?xml version = \"1.0\" encoding = \"utf-8\"?>"
-	//	"<businessServiceResponse>" // 业务根节点
-	//	"<RspType>10</RspType>"	// 请求状态 返回0，标识请求成功
-	//	"<result>11</result>"	// 状态响应码 返回0，标识成功接收消息
-	//	"<resultMsg>成功接收消息</resultMsg>"	// 返回消息信息
-	//	"<GROUP_TRANSACTIONID>1000000252201606149170517340</GROUP_TRANSACTIONID>" // 流水号 请求流水
-	//	"</businessServiceResponse>";
-
 	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
 	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
 	tinyxml2::XMLDocument doc;
@@ -205,7 +208,8 @@ bool doDisNumberResponse(void* _bobj)
 		return false;
 	}
 	const TCHAR* pcRspType = pRspType->GetText();
-	
+	_tprintf(_T("%s\n"), pcRspType);
+
 	tinyxml2::XMLElement* presult = pRspType->NextSiblingElement("result");
 	if (NULL == presult)
 	{
@@ -213,6 +217,7 @@ bool doDisNumberResponse(void* _bobj)
 		return false;
 	}
 	const TCHAR* pcresult = presult->GetText();
+	_tprintf(_T("%s\n"), pcresult);
 
 	tinyxml2::XMLElement* presultMsg = presult->NextSiblingElement("resultMsg");
 	if (NULL == presultMsg)
@@ -221,6 +226,7 @@ bool doDisNumberResponse(void* _bobj)
 		return false;
 	}
 	const TCHAR* pcresultMsg = presultMsg->GetText();
+	_tprintf(_T("%s\n"), pcresultMsg);
 
 	tinyxml2::XMLElement* pGROUP_TRANSACTIONID = presultMsg->NextSiblingElement("GROUP_TRANSACTIONID");
 	if (NULL == pGROUP_TRANSACTIONID)
@@ -229,6 +235,24 @@ bool doDisNumberResponse(void* _bobj)
 		return false;
 	}
 	const TCHAR* pcGROUP_TRANSACTIONID = pGROUP_TRANSACTIONID->GetText();
+	_tprintf(_T("%s\n"), pcGROUP_TRANSACTIONID);
 
+	return true;
+}
+
+//	<?xml version = "1.0" encoding = "utf-8"?>
+//	<poolList>
+//		<pool>
+//			<create_date>2016-02-19</create_date>
+//			<pool_infoUnit>GB</pool_infoUnit>
+//			<state>在用</state>
+//			<pool_info>10</pool_info>
+//			<exp_date>3000-01-01</exp_date>
+//			<acc_nbr>50LLC04244</acc_nbr>
+//			<eff_date>2016-02-19</eff_date>
+//		</pool>
+//	</poolList>
+bool doPoolListResponse(void* bobj)
+{
 	return true;
 }

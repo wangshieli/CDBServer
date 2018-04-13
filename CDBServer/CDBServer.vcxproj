@@ -164,6 +164,7 @@
     <ClInclude Include="doKhjlData.h" />
     <ClInclude Include="doLlcData.h" />
     <ClInclude Include="doLltcData.h" />
+    <ClInclude Include="doPoolList.h" />
     <ClInclude Include="doSimData.h" />
     <ClInclude Include="doSsdqData.h" />
     <ClInclude Include="doUserData.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="doKhjlData.cpp" />
     <ClCompile Include="doLlcData.cpp" />
     <ClCompile Include="doLltcData.cpp" />
+    <ClCompile Include="doPoolList.cpp" />
     <ClCompile Include="doSimData.cpp" />
     <ClCompile Include="doSsdqData.cpp" />
     <ClCompile Include="doUserData.cpp" />
