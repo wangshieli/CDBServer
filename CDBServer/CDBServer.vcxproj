@@ -172,6 +172,7 @@
     <ClInclude Include="InitWinsock.h" />
     <ClInclude Include="IoWorkerThread.h" />
     <ClInclude Include="MemPool.h" />
+    <ClInclude Include="NC_RequestComplete.h" />
     <ClInclude Include="ProcessCommand.h" />
     <ClInclude Include="RequestComplete.h" />
     <ClInclude Include="RequestPost.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="InitWinsock.cpp" />
     <ClCompile Include="IoWorkerThread.cpp" />
     <ClCompile Include="MemPool.cpp" />
+    <ClCompile Include="NC_RequestComplete.cpp" />
     <ClCompile Include="ProcessCommand.cpp" />
     <ClCompile Include="RequestComplete.cpp" />
     <ClCompile Include="RequestPost.cpp" />

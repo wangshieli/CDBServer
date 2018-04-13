@@ -3,8 +3,9 @@
 #include "RequestPost.h"
 #include "MemPool.h"
 #include "RequestComplete.h"
+#include "NC_RequestComplete.h"
 
-bool PostAcceptEx(LISTEN_OBJ* lobj)
+bool PostAcceptEx(LISTEN_OBJ* lobj, int nIndex)
 {
 	DWORD dwBytes = 0;
 	SOCKET_OBJ* c_sobj = NULL;
@@ -31,7 +32,10 @@ bool PostAcceptEx(LISTEN_OBJ* lobj)
 
 	c_sobj->pRelatedBObj = c_bobj;
 	c_bobj->pRelatedSObj = c_sobj;
-	c_bobj->SetIoRequestFunction(AcceptCompFailed, AcceptCompSuccess);
+	if (nIndex == 0)
+		c_bobj->SetIoRequestFunction(AcceptCompFailed, AcceptCompSuccess);
+	else 
+		c_bobj->SetIoRequestFunction(NC_AcceptCompFailed, NC_AcceptCompSuccess);
 
 	c_sobj->nKey = GetRand();
 	lobj->InsertAcpt(c_sobj);

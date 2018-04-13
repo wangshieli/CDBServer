@@ -168,6 +168,9 @@
     <ClInclude Include="API_RequestComplete.h">
       <Filter>API数据</Filter>
     </ClInclude>
+    <ClInclude Include="NC_RequestComplete.h">
+      <Filter>报竣数据</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -253,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="API_RequestComplete.cpp">
       <Filter>API数据</Filter>
+    </ClCompile>
+    <ClCompile Include="NC_RequestComplete.cpp">
+      <Filter>报竣数据</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

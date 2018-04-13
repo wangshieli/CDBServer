@@ -1,6 +1,6 @@
 #pragma once
 
-bool PostAcceptEx(LISTEN_OBJ* lobj);
+bool PostAcceptEx(LISTEN_OBJ* lobj, int nIndex);
 
 BOOL PostZeroRecv(SOCKET_OBJ* _sobj, BUFFER_OBJ* _bobj);
 
