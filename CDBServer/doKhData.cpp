@@ -75,16 +75,25 @@ bool doKhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strKhmc = (pDataObj++)->as<std::string>();
+//		const TCHAR* pSql = _T("SELECT a.sim_total, COALESCE(a.sim_using,0) as sim_using,COALESCE(a.use_15d,0) as use_15d,COALESCE(a.use_1m,0) as use_1m,\
+//COALESCE(a.due_1m,0) as due_1m,COALESCE(a.due_15d,0) as due_15d,\
+//b.jlxm,b.lxfs FROM (SELECT COUNT(*) AS 'sim_total',\
+//SUM(CASE WHEN zt='在用' THEN 1 ELSE 0 END) AS 'sim_using',\
+//SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'use_15d',\
+//SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'use_1m',\
+//SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'due_1m',\
+//SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'due_15d' \
+//FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		const TCHAR* pSql = _T("SELECT a.*,b.jlxm,b.lxfs FROM (SELECT COUNT(*) AS 'sim_total',\
 SUM(CASE WHEN zt='在用' THEN 1 ELSE 0 END) AS 'sim_using',\
 SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'use_15d',\
 SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'use_1m',\
 SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'due_1m',\
-SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'due_15d' FROM sim_tbl WHERE khmc='%s') a \
-LEFT JOIN kh_tbl b ON b.khmc='%s'");
-		TCHAR sql[512];
+SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'due_15d' \
+FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
+		TCHAR sql[1024];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 512, pSql, strKhmc.c_str());
+		_stprintf_s(sql, 1024, pSql, strKhmc.c_str(), strKhmc.c_str());
 
 		if (!Select_From_Tbl(sql, bobj->pRecorder))
 		{

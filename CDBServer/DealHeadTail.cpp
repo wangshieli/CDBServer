@@ -140,6 +140,14 @@ void PackCollectDate(msgpack::packer<msgpack::sbuffer>& _msgpack, const _variant
 	case VT_BOOL:
 		_msgpack.pack(var.boolVal);
 		break;
+
+	case VT_DECIMAL: //Ð¡Êý  	
+	{
+		__int64 val = var.decVal.Lo64;
+		val *= (var.decVal.sign == 128) ? -1 : 1;
+		_msgpack.pack((int)val);
+	}
+	break;
 	case VT_NULL:
 	case VT_EMPTY:
 	case VT_UNKNOWN:
