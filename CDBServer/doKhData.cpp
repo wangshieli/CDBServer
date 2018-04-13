@@ -93,7 +93,7 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
 		
-		ParserKhSimCount(_msgpack, bobj->pRecorder);
+		ParserKhSimCount(_msgpack, bobj->pRecorder, strKhmc);
 
 		DealTail(sbuf, bobj);
 	}

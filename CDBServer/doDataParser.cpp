@@ -239,10 +239,11 @@ void ParserSsdqData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& 
 	PackCollectDate(_msgpack, var);
 }
 
-void ParserKhSimCount(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder)
+void ParserKhSimCount(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder, std::string& strKhmc)
 {
 	_variant_t var;
-	_msgpack.pack_array(8);
+	_msgpack.pack_array(9);
+	_msgpack.pack(strKhmc);
 	var = pRecorder->GetCollect("jlxm");
 	PackCollectDate(_msgpack, var);
 	var = pRecorder->GetCollect("lxfs");

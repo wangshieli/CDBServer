@@ -20,4 +20,4 @@ void ParserLltcData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& 
 
 void ParserSsdqData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder);
 
-		void ParserKhSimCount(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder);
+		void ParserKhSimCount(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder, std::string& strKhmc);
