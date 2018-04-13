@@ -156,6 +156,7 @@
     <ClInclude Include="DBPool.h" />
     <ClInclude Include="DealHeadTail.h" />
     <ClInclude Include="doCardStatus.h" />
+    <ClInclude Include="doDataParser.h" />
     <ClInclude Include="doDisabledNumber.h" />
     <ClInclude Include="doAPIResponse.h" />
     <ClInclude Include="doDxzhData.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="DBPool.cpp" />
     <ClCompile Include="DealHeadTail.cpp" />
     <ClCompile Include="doCardStatus.cpp" />
+    <ClCompile Include="doDataParser.cpp" />
     <ClCompile Include="doDisabledNumber.cpp" />
     <ClCompile Include="doAPIResponse.cpp" />
     <ClCompile Include="doDxzhData.cpp" />

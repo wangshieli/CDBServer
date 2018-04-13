@@ -67,6 +67,9 @@
     <Filter Include="XML">
       <UniqueIdentifier>{0cde3a3d-8053-4b48-a05c-a22f7a310862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="业务处理\数据处理">
+      <UniqueIdentifier>{022ab414-4457-4453-bc37-eb041998c4bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -101,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="ExcelLoad.h">
       <Filter>业务处理\Excel导入</Filter>
-    </ClInclude>
-    <ClInclude Include="DealHeadTail.h">
-      <Filter>业务处理</Filter>
     </ClInclude>
     <ClInclude Include="ProcessCommand.h">
       <Filter>业务处理</Filter>
@@ -147,6 +147,12 @@
     <ClInclude Include="doAPIResponse.h">
       <Filter>业务处理\API</Filter>
     </ClInclude>
+    <ClInclude Include="DealHeadTail.h">
+      <Filter>业务处理\数据处理</Filter>
+    </ClInclude>
+    <ClInclude Include="doDataParser.h">
+      <Filter>业务处理\数据处理</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -181,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="ExcelLoad.cpp">
       <Filter>业务处理\Excel导入</Filter>
-    </ClCompile>
-    <ClCompile Include="DealHeadTail.cpp">
-      <Filter>业务处理</Filter>
     </ClCompile>
     <ClCompile Include="ProcessCommand.cpp">
       <Filter>业务处理</Filter>
@@ -226,6 +229,12 @@
     </ClCompile>
     <ClCompile Include="doAPIResponse.cpp">
       <Filter>业务处理\API</Filter>
+    </ClCompile>
+    <ClCompile Include="DealHeadTail.cpp">
+      <Filter>业务处理\数据处理</Filter>
+    </ClCompile>
+    <ClCompile Include="doDataParser.cpp">
+      <Filter>业务处理\数据处理</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
