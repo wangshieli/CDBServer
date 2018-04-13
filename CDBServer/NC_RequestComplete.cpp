@@ -57,7 +57,7 @@ void NC_AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 		&localAddr, &localAddrlen,
 		&remoteAddr, &remoteAddrlen);
 
-	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
 	{
 		c_bobj->SetIoRequestFunction(NC_RecvZeroCompFailed, NC_RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
@@ -124,7 +124,7 @@ void NC_RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
 	c_bobj->dwRecvedCount += dwTransion;
-	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	if (NULL == strstr(c_bobj->data, "\r\n\r\n"))
 	{
 		c_bobj->SetIoRequestFunction(NC_RecvZeroCompFailed, NC_RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))

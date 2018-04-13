@@ -44,6 +44,7 @@ void API_ConnectCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 		return;
 	}
 
+	memset(c_bobj->data, 0x00, c_bobj->dwRecvedCount);
 	c_bobj->dwRecvedCount = 0;
 	c_bobj->dwSendedCount = 0;
 	c_bobj->SetIoRequestFunction(API_RecvZeroCompFailed, API_RecvZeroCompSuccess);
@@ -157,10 +158,22 @@ void API_RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
 	c_bobj->dwRecvedCount += dwTransion;
-	c_bobj->SetIoRequestFunction(API_CheckRecvFailed, API_CheckRecvSuccess);
-
-	if (PostRecv(a_sobj, c_bobj)) // 接收判断
+	if (strstr(c_bobj->data, "\r\n\r\n") == NULL)
+	{
+		c_bobj->SetIoRequestFunction(API_RecvZeroCompFailed, API_RecvZeroCompSuccess);
+		if (!PostZeroRecv(a_sobj, c_bobj))
+		{
+			CSCloseSocket(a_sobj);
+			freeSObj(a_sobj);
+			API_Failed(c_bobj);
+			return;
+		}
 		return;
+	}
+	//c_bobj->SetIoRequestFunction(API_CheckRecvFailed, API_CheckRecvSuccess);
+
+	//if (PostRecv(a_sobj, c_bobj)) // 接收判断
+	//	return;
 
 	CSCloseSocket(a_sobj);
 	freeSObj(a_sobj);
