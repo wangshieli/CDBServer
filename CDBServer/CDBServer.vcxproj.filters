@@ -73,6 +73,15 @@
     <Filter Include="业务处理\API\流量池列表查询">
       <UniqueIdentifier>{9499fedb-ebf7-474d-b80d-0070f392c346}</UniqueIdentifier>
     </Filter>
+    <Filter Include="客户端数据">
+      <UniqueIdentifier>{54476eee-ae45-4667-a2df-7c541779cf43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="API数据">
+      <UniqueIdentifier>{a12c38c0-790f-4f0b-92ca-0ee8ec5abb81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="报竣数据">
+      <UniqueIdentifier>{1f43517c-30e1-45df-a930-a615c3420a71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -100,9 +109,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="RequestPost.h">
-      <Filter>Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="RequestComplete.h">
       <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="ExcelLoad.h">
@@ -138,9 +144,6 @@
     <ClInclude Include="doDisabledNumber.h">
       <Filter>业务处理\API\停复机操作</Filter>
     </ClInclude>
-    <ClInclude Include="API_RequestComplete.h">
-      <Filter>Socket</Filter>
-    </ClInclude>
     <ClInclude Include="doCardStatus.h">
       <Filter>业务处理\API\状态查询</Filter>
     </ClInclude>
@@ -158,6 +161,12 @@
     </ClInclude>
     <ClInclude Include="doPoolList.h">
       <Filter>业务处理\API\流量池列表查询</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestComplete.h">
+      <Filter>客户端数据</Filter>
+    </ClInclude>
+    <ClInclude Include="API_RequestComplete.h">
+      <Filter>API数据</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,9 +195,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RequestPost.cpp">
-      <Filter>Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="RequestComplete.cpp">
       <Filter>Socket</Filter>
     </ClCompile>
     <ClCompile Include="ExcelLoad.cpp">
@@ -224,9 +230,6 @@
     <ClCompile Include="doDisabledNumber.cpp">
       <Filter>业务处理\API\停复机操作</Filter>
     </ClCompile>
-    <ClCompile Include="API_RequestComplete.cpp">
-      <Filter>Socket</Filter>
-    </ClCompile>
     <ClCompile Include="doCardStatus.cpp">
       <Filter>业务处理\API\状态查询</Filter>
     </ClCompile>
@@ -244,6 +247,12 @@
     </ClCompile>
     <ClCompile Include="doPoolList.cpp">
       <Filter>业务处理\API\流量池列表查询</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestComplete.cpp">
+      <Filter>客户端数据</Filter>
+    </ClCompile>
+    <ClCompile Include="API_RequestComplete.cpp">
+      <Filter>API数据</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
