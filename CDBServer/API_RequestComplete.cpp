@@ -151,52 +151,15 @@ void API_RecvCompFailed(void* _sobj, void* _bobj)
 
 void API_RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 {
-	if (dwTransion <= 0)
+	if (dwTransion < 0)
 		return API_RecvCompFailed(_sobj, _bobj);
 
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
-	c_bobj->dwRecvedCount += dwTransion;
-	if (strstr(c_bobj->data, "\r\n\r\n") == NULL)
-	{
-		c_bobj->SetIoRequestFunction(API_RecvZeroCompFailed, API_RecvZeroCompSuccess);
-		if (!PostZeroRecv(a_sobj, c_bobj))
-		{
-			CSCloseSocket(a_sobj);
-			freeSObj(a_sobj);
-			API_Failed(c_bobj);
-			return;
-		}
-		return;
-	}
-	//c_bobj->SetIoRequestFunction(API_CheckRecvFailed, API_CheckRecvSuccess);
-
-	//if (PostRecv(a_sobj, c_bobj)) // 接收判断
-	//	return;
-
-	CSCloseSocket(a_sobj);
-	freeSObj(a_sobj);
-	DoReturnData(c_bobj);
-}
-
-void API_CheckRecvFailed(void* _sobj, void* _bobj)
-{
-	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
-	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
-
-	CSCloseSocket(a_sobj);
-	freeSObj(a_sobj);
-	DoReturnData(c_bobj);
-}
-
-void API_CheckRecvSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
-{
-	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
-	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
-
 	if (dwTransion == 0) // 对方关闭连接
 	{
+		_tprintf(_T("客户端关闭\n"));
 		CSCloseSocket(a_sobj);
 		freeSObj(a_sobj);
 		DoReturnData(c_bobj);
@@ -204,10 +167,12 @@ void API_CheckRecvSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	}
 
 	c_bobj->dwRecvedCount += dwTransion;
-	if (PostRecv(a_sobj, c_bobj))
+	c_bobj->SetIoRequestFunction(API_RecvZeroCompFailed, API_RecvZeroCompSuccess);
+	if (!PostZeroRecv(a_sobj, c_bobj))
+	{
+		CSCloseSocket(a_sobj);
+		freeSObj(a_sobj);
+		API_Failed(c_bobj);
 		return;
-
-	CSCloseSocket(a_sobj);
-	freeSObj(a_sobj);
-	DoReturnData(c_bobj);
+	}
 }

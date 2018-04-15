@@ -11,6 +11,3 @@ void API_RecvZeroCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
 
 void API_RecvCompFailed(void* _sobj, void* _bobj);
 void API_RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
-
-void API_CheckRecvFailed(void* _sobj, void* _bobj);
-void API_CheckRecvSuccess(DWORD dwTransion, void* _sobj, void* _bobj);
