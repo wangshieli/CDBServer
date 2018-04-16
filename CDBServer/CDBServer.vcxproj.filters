@@ -88,6 +88,12 @@
     <Filter Include="业务处理\Client\数据处理">
       <UniqueIdentifier>{022ab414-4457-4453-bc37-eb041998c4bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="业务处理\API\三码充值">
+      <UniqueIdentifier>{bef71b27-2590-452c-ad9a-75c5df3ad2ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="辅助线程">
+      <UniqueIdentifier>{5c22f661-5b10-4898-9df6-524cf9510695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -180,6 +186,9 @@
     <ClInclude Include="doNcData.h">
       <Filter>业务处理\NCServer</Filter>
     </ClInclude>
+    <ClInclude Include="theHelpThread.h">
+      <Filter>辅助线程</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -271,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="doNcData.cpp">
       <Filter>业务处理\NCServer</Filter>
+    </ClCompile>
+    <ClCompile Include="theHelpThread.cpp">
+      <Filter>辅助线程</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

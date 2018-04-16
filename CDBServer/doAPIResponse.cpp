@@ -6,6 +6,7 @@
 #include "MemPool.h"
 #include "API_RequestComplete.h"
 #include "DealHeadTail.h"
+#include "theHelpThread.h"
 #include "tinyxml2.h"
 
 concurrent_hash_map<int, SOCKET_OBJ*> ConnMap;
@@ -122,7 +123,7 @@ void API_Failed(BUFFER_OBJ* bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(3);
+	_msgpack.pack_array(4);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(1);
@@ -137,7 +138,7 @@ void API_Successed(BUFFER_OBJ* bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(3);
+	_msgpack.pack_array(4);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(0);
@@ -168,8 +169,6 @@ void DoReturnData(BUFFER_OBJ* bobj)
 	{
 		return API_Failed(bobj);
 	}
-
-	return API_Successed(bobj);
 }
 
 
@@ -187,55 +186,130 @@ bool doDisNumberResponse(void* _bobj)
 	tinyxml2::XMLDocument doc;
 	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))
 	{
-		// 不是XML格式的数据
-		_tprintf(_T("%s\n"), pResponData);
 		delete pResponData;
 		return false;
 	}
 	delete pResponData;
 
-	tinyxml2::XMLElement* RootElment = doc.FirstChildElement("businessServiceResponse");
-	if (NULL == RootElment)
-	{
-		_tprintf(_T("接收到的xml根节点格式错误\n"));
-		return false;
-	}
+	DIS_NUMBER* pds = new DIS_NUMBER;
+	pds->strJrhm = bobj->strJrhm;
+	tinyxml2::XMLElement* root = doc.RootElement();
+	tinyxml2::XMLElement* RspType = root->FirstChildElement(); // <RspType>0</RspType>
+	pds->strRsptype = RspType->GetText();
 
-	tinyxml2::XMLElement* pRspType = RootElment->FirstChildElement("RspType");
-	if (NULL == pRspType)
-	{
-		_tprintf(_T("接收到的xml节点RspType格式错误\n"));
-		return false;
-	}
-	const TCHAR* pcRspType = pRspType->GetText();
-	_tprintf(_T("%s\n"), pcRspType);
+	tinyxml2::XMLElement* result = RspType->NextSiblingElement(); // <result>0</result>
+	pds->strResult = result->GetText();
 
-	tinyxml2::XMLElement* presult = pRspType->NextSiblingElement("result");
-	if (NULL == presult)
-	{
-		_tprintf(_T("接收到的xml节点result格式错误\n"));
-		return false;
-	}
-	const TCHAR* pcresult = presult->GetText();
-	_tprintf(_T("%s\n"), pcresult);
+	tinyxml2::XMLElement* resultMsg = result->NextSiblingElement(); // <resultMsg>成功接收消息</resultMsg>
+	pds->strResultMsg = resultMsg->GetText();
 
-	tinyxml2::XMLElement* presultMsg = presult->NextSiblingElement("resultMsg");
-	if (NULL == presultMsg)
-	{
-		_tprintf(_T("接收到的xml节点resultMsg格式错误\n"));
-		return false;
-	}
-	const TCHAR* pcresultMsg = presultMsg->GetText();
-	_tprintf(_T("%s\n"), pcresultMsg);
+	tinyxml2::XMLElement* GROUP_TRANSACTIONID = resultMsg->NextSiblingElement(); // <GROUP_TRANSACTIONID>1000000252201606149170517340</GROUP_TRANSACTIONID>
+	pds->strGROUP_TRANSACTIONID = GROUP_TRANSACTIONID->GetText();
 
-	tinyxml2::XMLElement* pGROUP_TRANSACTIONID = presultMsg->NextSiblingElement("GROUP_TRANSACTIONID");
-	if (NULL == pGROUP_TRANSACTIONID)
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	_msgpack.pack_array(5);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->strJrhm);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(4);
+	_msgpack.pack(pds->strRsptype);
+	_msgpack.pack(pds->strResult);
+	_msgpack.pack(pds->strResultMsg);
+	_msgpack.pack(pds->strGROUP_TRANSACTIONID);
+
+	DealTail(sbuf, bobj);
+
+	PostThreadMessage(g_HelpThreadID, MSG_DIS_NUMBER, (WPARAM)pds, 0);// 进行数据库操作
+
+	return true;
+}
+
+
+//<?xml version = "1.0" encoding = "utf-8"?>
+//<root>
+//	<Query_response>
+//		<BasicInfo>
+//			<result>0</result>
+//			<resultMsg>处理成功!</resultMsg>
+//		</BasicInfo>
+//		<prodRecords>
+//			<prodRecord>
+//<				productInfo>
+//					<productStatusCd>1</productStatusCd>
+//					<productStatusName>在用</productStatusName>
+//					<servCreateDate>20160531</servCreateDate>
+//				</productInfo>
+//			</prodRecord>
+//		</prodRecords>
+//		<number>14910000000</number>
+//		<GROUP_TRANSACTIONID>1000000252201609302104391983</GROUP_TRANSACTIONID>
+//	</Query_response>
+//</root>
+bool doCardStatusResponse(void* _bobj)
+{
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	tinyxml2::XMLDocument doc;
+	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))
 	{
-		_tprintf(_T("接收到的xml节点GROUP_TRANSACTIONID格式错误\n"));
+		delete pResponData;
 		return false;
 	}
-	const TCHAR* pcGROUP_TRANSACTIONID = pGROUP_TRANSACTIONID->GetText();
-	_tprintf(_T("%s\n"), pcGROUP_TRANSACTIONID);
+	delete pResponData;
+
+	CARD_STATUS* pcs = new CARD_STATUS; // 需要释放
+	tinyxml2::XMLElement* root = doc.RootElement();
+	tinyxml2::XMLElement* BasicInfo = root->FirstChildElement()->FirstChildElement();
+	tinyxml2::XMLElement* result = BasicInfo->FirstChildElement(); // <result>0</result>
+	pcs->strResult = result->GetText();
+
+	tinyxml2::XMLElement* resultMsg = result->NextSiblingElement(); // <resultMsg>处理成功!</resultMsg>
+	pcs->strResultMsg = resultMsg->GetText();
+
+	tinyxml2::XMLElement* prodRecords = BasicInfo->NextSiblingElement();
+	tinyxml2::XMLElement* productInfo = prodRecords->FirstChildElement()->FirstChildElement();
+	tinyxml2::XMLElement* productStatusCd = productInfo->FirstChildElement(); // <productStatusCd>1</productStatusCd>
+	pcs->strProductStatusCd = productStatusCd->GetText();
+
+	tinyxml2::XMLElement* productStatusName = productStatusCd->NextSiblingElement(); // <productStatusName>在用</productStatusName>
+	pcs->strProductStatusName = productStatusName->GetText();
+
+	tinyxml2::XMLElement* servCreateDate = productStatusName->NextSiblingElement(); // <servCreateDate>20160531</servCreateDate>
+	pcs->strPservCreateDate = servCreateDate->GetText();
+
+	tinyxml2::XMLElement* number = prodRecords->NextSiblingElement(); // <number>14910000000</number>
+	pcs->strNumber = number->GetText();
+
+	tinyxml2::XMLElement* GROUP_TRANSACTIONID = number->NextSiblingElement(); // <GROUP_TRANSACTIONID>1000000252201609302104391983</GROUP_TRANSACTIONID>
+	pcs->strGROUP_TRANSACTIONID = GROUP_TRANSACTIONID->GetText();
+
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	_msgpack.pack_array(5);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->strJrhm);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(6);
+	_msgpack.pack(pcs->strResult);
+	_msgpack.pack(pcs->strResultMsg);
+	_msgpack.pack(pcs->strProductStatusCd);
+	_msgpack.pack(pcs->strProductStatusName);
+	_msgpack.pack(pcs->strPservCreateDate);
+	//_msgpack.pack(pcs->strNumber);
+	_msgpack.pack(pcs->strGROUP_TRANSACTIONID);
+
+	DealTail(sbuf, bobj);
+
+	PostThreadMessage(g_HelpThreadID, MSG_CARD_STATUS, (WPARAM)pcs, 0);// 进行数据库操作
 
 	return true;
 }

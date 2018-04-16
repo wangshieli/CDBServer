@@ -21,4 +21,6 @@ void DoReturnData(BUFFER_OBJ* bobj);
 
 bool doDisNumberResponse(void* bobj);
 
+bool doCardStatusResponse(void* bobj);
+
 bool doPoolListResponse(void* bobj);

@@ -5,7 +5,7 @@
 #include "doAPIResponse.h"
 #include "DBPool.h"
 
-void DoData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData, const TCHAR* orderTypeId);
+void DoDisNumData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData, const TCHAR* orderTypeId);
 
 bool doDisabledNumber(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 {
@@ -19,14 +19,14 @@ bool doDisabledNumber(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	case DN_DISABLE:
 	{
 		const TCHAR* pData = _T("GET /m2m_ec/query.do?method=disabledNumber&user_id=%s&access_number=%s&acctCd=&passWord=%s&sign=%s&orderTypeId=19\r\n\r\n");
-		DoData(pObj, bobj, pData, "19");
+		DoDisNumData(pObj, bobj, pData, "19");
 	}
 	break;
 
 	case DN_ABLE:
 	{ 
 		const TCHAR* pData = _T("GET /m2m_ec/query.do?method=disabledNumber&user_id=%s&access_number=%s&acctCd=&passWord=%s&sign=%s&orderTypeId=20\r\n\r\n");
-		DoData(pObj, bobj, pData, "20");
+		DoDisNumData(pObj, bobj, pData, "20");
 	}
 	break;
 	default:
@@ -35,7 +35,7 @@ bool doDisabledNumber(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	return true;
 }
 
-void DoData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData, const TCHAR* orderTypeId)
+void DoDisNumData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData, const TCHAR* orderTypeId)
 {
 	msgpack::object* pArray = (pObj++)->via.array.ptr;
 	msgpack::object* pDataObj = (pArray++)->via.array.ptr;
