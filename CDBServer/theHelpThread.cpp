@@ -32,6 +32,11 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 			delete pcs;
 		}
 		break;
+		case MSG_NOTIFY_CONTRACT_ROOT:
+		{
+			
+		}
+		break;
 		default:
 			break;
 		}

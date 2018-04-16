@@ -28,7 +28,7 @@ typedef struct _card_status
 }CARD_STATUS;
 
 
-
+#define MSG_NOTIFY_CONTRACT_ROOT WM_USER + 110
 typedef struct _notify_contract_root
 {
 	std::string strType;

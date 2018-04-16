@@ -90,6 +90,8 @@ bool DoNotifyContractRoot(tinyxml2::XMLElement* root)
 	tinyxml2::XMLElement* RESULTMSG = STATUSDT->NextSiblingElement(); // <RESULTMSG>³É¹¦</RESULTMSG>
 	pNcr->strResultmsg = RESULTMSG->GetText();
 
+	PostThreadMessage(g_HelpThreadID, MSG_NOTIFY_CONTRACT_ROOT, (WPARAM)pNcr, 0);
+
 	int nAccepttype = 0;
 	switch (nAccepttype)
 	{
