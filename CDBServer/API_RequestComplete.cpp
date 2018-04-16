@@ -14,6 +14,13 @@ void API_ConnectCompFailed(void* _sobj, void* _bobj)
 	RemoveConn(a_sobj);
 	FreeAddrInfo(a_sobj->sAddrInfo);
 
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(a_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
+
 	CSCloseSocket(a_sobj);
 	freeSObj(a_sobj);
 
@@ -66,6 +73,13 @@ void API_SendCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(a_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
+
 	CSCloseSocket(a_sobj);
 	freeSObj(a_sobj);
 
@@ -113,6 +127,13 @@ void API_RecvZeroCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(a_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
+
 	CSCloseSocket(a_sobj);
 	freeSObj(a_sobj);
 
@@ -129,19 +150,21 @@ void API_RecvZeroCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	{
 		CSCloseSocket(c_sobj);
 		freeSObj(c_sobj);
-		goto error;
+		API_Failed(c_bobj);
 	}
-	return;
-
-error:
-	API_Failed(c_bobj);
-	return;
 }
 
 void API_RecvCompFailed(void* _sobj, void* _bobj)
 {
 	SOCKET_OBJ* a_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
+
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(a_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
 
 	CSCloseSocket(a_sobj);
 	freeSObj(a_sobj);

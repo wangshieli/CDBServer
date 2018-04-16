@@ -28,33 +28,6 @@
     <Filter Include="业务处理">
       <UniqueIdentifier>{93d83ce3-4e26-4de6-9989-2522394ded53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="业务处理\Excel导入">
-      <UniqueIdentifier>{d3177273-4cd4-4815-90d2-149dda162682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Sim操作">
-      <UniqueIdentifier>{3a6a3f2e-b910-4229-b401-25478fef261e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Kh操作">
-      <UniqueIdentifier>{dcf062a9-1d50-447d-8a3d-adaf5ec492e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Khjl操作">
-      <UniqueIdentifier>{9d05834b-db75-4101-907a-5c56ab2ea84e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Llc操作">
-      <UniqueIdentifier>{0cd76c65-cefd-4397-91e7-a7aed88caa63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Dxzh操作">
-      <UniqueIdentifier>{d3938fc9-88ce-47a2-b0be-9999334fc995}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Lltc操作">
-      <UniqueIdentifier>{7b9a89eb-dce6-4569-b6dc-b32ef68cd69e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\User操作">
-      <UniqueIdentifier>{d2e3d580-f294-4bba-be6f-8c356b57e1ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="业务处理\Ssdq操作">
-      <UniqueIdentifier>{8788e7ae-99bf-4814-8968-1ecaeea79e53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="业务处理\API">
       <UniqueIdentifier>{469fc4b0-fd30-4382-9b31-3347215b1e66}</UniqueIdentifier>
     </Filter>
@@ -67,9 +40,6 @@
     <Filter Include="XML">
       <UniqueIdentifier>{0cde3a3d-8053-4b48-a05c-a22f7a310862}</UniqueIdentifier>
     </Filter>
-    <Filter Include="业务处理\数据处理">
-      <UniqueIdentifier>{022ab414-4457-4453-bc37-eb041998c4bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="业务处理\API\流量池列表查询">
       <UniqueIdentifier>{9499fedb-ebf7-474d-b80d-0070f392c346}</UniqueIdentifier>
     </Filter>
@@ -81,6 +51,42 @@
     </Filter>
     <Filter Include="报竣数据">
       <UniqueIdentifier>{1f43517c-30e1-45df-a930-a615c3420a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\NCServer">
+      <UniqueIdentifier>{d9c0df05-5b5b-4c57-bf8a-b0e5219caaef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client">
+      <UniqueIdentifier>{e5d28f4d-0f75-43de-ad9a-68e025f90e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Dxzh操作">
+      <UniqueIdentifier>{d3938fc9-88ce-47a2-b0be-9999334fc995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Lltc操作">
+      <UniqueIdentifier>{7b9a89eb-dce6-4569-b6dc-b32ef68cd69e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Llc操作">
+      <UniqueIdentifier>{0cd76c65-cefd-4397-91e7-a7aed88caa63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Kh操作">
+      <UniqueIdentifier>{dcf062a9-1d50-447d-8a3d-adaf5ec492e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Khjl操作">
+      <UniqueIdentifier>{9d05834b-db75-4101-907a-5c56ab2ea84e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Excel导入">
+      <UniqueIdentifier>{d3177273-4cd4-4815-90d2-149dda162682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Sim操作">
+      <UniqueIdentifier>{3a6a3f2e-b910-4229-b401-25478fef261e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\Ssdq操作">
+      <UniqueIdentifier>{8788e7ae-99bf-4814-8968-1ecaeea79e53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\User操作">
+      <UniqueIdentifier>{d2e3d580-f294-4bba-be6f-8c356b57e1ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\Client\数据处理">
+      <UniqueIdentifier>{022ab414-4457-4453-bc37-eb041998c4bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,34 +118,34 @@
       <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="ExcelLoad.h">
-      <Filter>业务处理\Excel导入</Filter>
+      <Filter>业务处理\Client\Excel导入</Filter>
     </ClInclude>
     <ClInclude Include="ProcessCommand.h">
       <Filter>业务处理</Filter>
     </ClInclude>
     <ClInclude Include="doKhData.h">
-      <Filter>业务处理\Kh操作</Filter>
+      <Filter>业务处理\Client\Kh操作</Filter>
     </ClInclude>
     <ClInclude Include="doKhjlData.h">
-      <Filter>业务处理\Khjl操作</Filter>
+      <Filter>业务处理\Client\Khjl操作</Filter>
     </ClInclude>
     <ClInclude Include="doSimData.h">
-      <Filter>业务处理\Sim操作</Filter>
+      <Filter>业务处理\Client\Sim操作</Filter>
     </ClInclude>
     <ClInclude Include="doUserData.h">
-      <Filter>业务处理\User操作</Filter>
+      <Filter>业务处理\Client\User操作</Filter>
     </ClInclude>
     <ClInclude Include="doLlcData.h">
-      <Filter>业务处理\Llc操作</Filter>
+      <Filter>业务处理\Client\Llc操作</Filter>
     </ClInclude>
     <ClInclude Include="doLltcData.h">
-      <Filter>业务处理\Lltc操作</Filter>
+      <Filter>业务处理\Client\Lltc操作</Filter>
     </ClInclude>
     <ClInclude Include="doDxzhData.h">
-      <Filter>业务处理\Dxzh操作</Filter>
+      <Filter>业务处理\Client\Dxzh操作</Filter>
     </ClInclude>
     <ClInclude Include="doSsdqData.h">
-      <Filter>业务处理\Ssdq操作</Filter>
+      <Filter>业务处理\Client\Ssdq操作</Filter>
     </ClInclude>
     <ClInclude Include="doDisabledNumber.h">
       <Filter>业务处理\API\停复机操作</Filter>
@@ -154,10 +160,10 @@
       <Filter>业务处理\API</Filter>
     </ClInclude>
     <ClInclude Include="DealHeadTail.h">
-      <Filter>业务处理\数据处理</Filter>
+      <Filter>业务处理\Client\数据处理</Filter>
     </ClInclude>
     <ClInclude Include="doDataParser.h">
-      <Filter>业务处理\数据处理</Filter>
+      <Filter>业务处理\Client\数据处理</Filter>
     </ClInclude>
     <ClInclude Include="doPoolList.h">
       <Filter>业务处理\API\流量池列表查询</Filter>
@@ -170,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="NC_RequestComplete.h">
       <Filter>报竣数据</Filter>
+    </ClInclude>
+    <ClInclude Include="doNcData.h">
+      <Filter>业务处理\NCServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -201,34 +210,34 @@
       <Filter>Socket</Filter>
     </ClCompile>
     <ClCompile Include="ExcelLoad.cpp">
-      <Filter>业务处理\Excel导入</Filter>
+      <Filter>业务处理\Client\Excel导入</Filter>
     </ClCompile>
     <ClCompile Include="ProcessCommand.cpp">
       <Filter>业务处理</Filter>
     </ClCompile>
     <ClCompile Include="doKhData.cpp">
-      <Filter>业务处理\Kh操作</Filter>
+      <Filter>业务处理\Client\Kh操作</Filter>
     </ClCompile>
     <ClCompile Include="doKhjlData.cpp">
-      <Filter>业务处理\Khjl操作</Filter>
+      <Filter>业务处理\Client\Khjl操作</Filter>
     </ClCompile>
     <ClCompile Include="doSimData.cpp">
-      <Filter>业务处理\Sim操作</Filter>
+      <Filter>业务处理\Client\Sim操作</Filter>
     </ClCompile>
     <ClCompile Include="doUserData.cpp">
-      <Filter>业务处理\User操作</Filter>
+      <Filter>业务处理\Client\User操作</Filter>
     </ClCompile>
     <ClCompile Include="doLlcData.cpp">
-      <Filter>业务处理\Llc操作</Filter>
+      <Filter>业务处理\Client\Llc操作</Filter>
     </ClCompile>
     <ClCompile Include="doLltcData.cpp">
-      <Filter>业务处理\Lltc操作</Filter>
+      <Filter>业务处理\Client\Lltc操作</Filter>
     </ClCompile>
     <ClCompile Include="doDxzhData.cpp">
-      <Filter>业务处理\Dxzh操作</Filter>
+      <Filter>业务处理\Client\Dxzh操作</Filter>
     </ClCompile>
     <ClCompile Include="doSsdqData.cpp">
-      <Filter>业务处理\Ssdq操作</Filter>
+      <Filter>业务处理\Client\Ssdq操作</Filter>
     </ClCompile>
     <ClCompile Include="doDisabledNumber.cpp">
       <Filter>业务处理\API\停复机操作</Filter>
@@ -243,10 +252,10 @@
       <Filter>业务处理\API</Filter>
     </ClCompile>
     <ClCompile Include="DealHeadTail.cpp">
-      <Filter>业务处理\数据处理</Filter>
+      <Filter>业务处理\Client\数据处理</Filter>
     </ClCompile>
     <ClCompile Include="doDataParser.cpp">
-      <Filter>业务处理\数据处理</Filter>
+      <Filter>业务处理\Client\数据处理</Filter>
     </ClCompile>
     <ClCompile Include="doPoolList.cpp">
       <Filter>业务处理\API\流量池列表查询</Filter>
@@ -259,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="NC_RequestComplete.cpp">
       <Filter>报竣数据</Filter>
+    </ClCompile>
+    <ClCompile Include="doNcData.cpp">
+      <Filter>业务处理\NCServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

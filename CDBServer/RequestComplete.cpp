@@ -17,6 +17,13 @@ void AcceptCompFailed(void* _lobj, void* _c_obj)
 
 	lobj->RemoveAcpt(c_sobj);
 
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(lobj->sListenSock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
+
 	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
@@ -86,6 +93,13 @@ void RecvZeroCompFailed(void* _sobj, void* _bobj)
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 	
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(c_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
+
 	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
 	freeBObj(c_bobj);
@@ -110,6 +124,13 @@ void RecvCompFailed(void* _sobj, void* _bobj)
 {
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
+
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(c_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
 
 	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);
@@ -146,6 +167,13 @@ void SendCompFailed(void* _sobj, void* _bobj)
 {
 	SOCKET_OBJ* c_sobj = (SOCKET_OBJ*)_sobj;
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
+
+#ifdef _DEBUG
+	DWORD dwTranstion = 0;
+	DWORD dwFlags = 0;
+	if (!WSAGetOverlappedResult(c_sobj->sock, &c_bobj->ol, &dwTranstion, FALSE, &dwFlags))
+		_tprintf(_T("函数:%s ErrorCode = %d\n"), __FUNCTION__, WSAGetLastError());
+#endif
 
 	CSCloseSocket(c_sobj);
 	freeSObj(c_sobj);

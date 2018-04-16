@@ -105,6 +105,11 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 			e.ErrorMessage(), e.Error(), (const TCHAR*)e.Source(), (const TCHAR*)e.Description());
 		goto error;
 	}
+	catch (...)
+	{
+		_tprintf(_T("Î´Öª´íÎó\n"));
+		goto error;
+	}
 
 	return true;
 
