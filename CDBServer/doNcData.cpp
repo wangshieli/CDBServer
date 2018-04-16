@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SignalData.h"
 #include "doNcData.h"
-#include "DBPool.h"
 #include "NC_RequestComplete.h"
 #include "RequestPost.h"
 #include "MemPool.h"
