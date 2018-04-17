@@ -166,6 +166,7 @@
     <ClInclude Include="doLlcData.h" />
     <ClInclude Include="doLltcData.h" />
     <ClInclude Include="doNcData.h" />
+    <ClInclude Include="doPay2.h" />
     <ClInclude Include="doPoolList.h" />
     <ClInclude Include="doServActive.h" />
     <ClInclude Include="doSimData.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="doLlcData.cpp" />
     <ClCompile Include="doLltcData.cpp" />
     <ClCompile Include="doNcData.cpp" />
+    <ClCompile Include="doPay2.cpp" />
     <ClCompile Include="doPoolList.cpp" />
     <ClCompile Include="doServActive.cpp" />
     <ClCompile Include="doSimData.cpp" />

@@ -1,8 +1,8 @@
 #pragma once
 #ifdef _DEBUG
-#import "..\..\WOTDes\WOTEDUtils\bin\Debug\WOTEDUtils.tlb"
+#import "..\WOTEDUtils\bin\Debug\WOTEDUtils.tlb"
 #else
-#import "..\..\WOTDes\WOTEDUtils\bin\Release\WOTEDUtils.tlb"
+#import "..\WOTEDUtils\bin\Release\WOTEDUtils.tlb"
 #endif // _DEBUG
 using namespace WOTEDUtils;
 
@@ -24,5 +24,7 @@ bool doDisNumberResponse(void* bobj);
 bool doCardStatusResponse(void* bobj);
 
 bool doServActiveResponse(void* bobj);
+
+bool doPay2Response(void* bobj);
 
 bool doPoolListResponse(void* bobj);

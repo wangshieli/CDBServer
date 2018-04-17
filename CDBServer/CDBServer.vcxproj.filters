@@ -198,6 +198,9 @@
     <ClInclude Include="doServActive.h">
       <Filter>业务处理\API\活卡激活</Filter>
     </ClInclude>
+    <ClInclude Include="doPay2.h">
+      <Filter>业务处理\API\三码充值</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -298,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="doServActive.cpp">
       <Filter>业务处理\API\活卡激活</Filter>
+    </ClCompile>
+    <ClCompile Include="doPay2.cpp">
+      <Filter>业务处理\API\三码充值</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
