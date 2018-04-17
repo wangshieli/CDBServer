@@ -8,6 +8,7 @@
 #include "DealHeadTail.h"
 #include "theHelpThread.h"
 #include "tinyxml2.h"
+#include "cJSON.h"
 
 concurrent_hash_map<int, SOCKET_OBJ*> ConnMap;
 
@@ -311,6 +312,56 @@ bool doCardStatusResponse(void* _bobj)
 
 	PostThreadMessage(g_HelpThreadID, MSG_CARD_STATUS, (WPARAM)pcs, 0);// 进行数据库操作
 
+	return true;
+}
+
+//{
+//	"RESULT":   "0",
+//	"SMSG" : "成功",
+//	"GROUP_TRANSACTIONID" : "1000000252201702161611585211"
+//}
+bool doServActiveResponse(void* _bobj)
+{
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	cJSON* root = NULL;
+	root = cJSON_Parse(pResponData);
+	if (NULL == root)
+	{
+		delete pResponData;
+		return false;
+	}
+	delete pResponData;
+
+	SERV_ACTIVE* psa = new SERV_ACTIVE;
+	psa->strJrhm = bobj->strJrhm;
+	cJSON* RESULT = cJSON_GetObjectItem(root, "RESULT");
+	psa->strResult = RESULT->valuestring;
+	cJSON* SMSG = cJSON_GetObjectItem(root, "SMSG");
+	psa->strSmsg = SMSG->valuestring;
+	cJSON* GROUP_TRANSACTIONID = cJSON_GetObjectItem(root, "GROUP_TRANSACTIONID");
+	psa->strGROUP_TRANSACTIONID = GROUP_TRANSACTIONID->valuestring;
+
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	_msgpack.pack_array(5);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->strJrhm);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(3);
+	_msgpack.pack(psa->strResult);
+	_msgpack.pack(psa->strSmsg);
+	_msgpack.pack(psa->strGROUP_TRANSACTIONID);
+
+	DealTail(sbuf, bobj);
+
+	PostThreadMessage(g_HelpThreadID, MSG_SERV_ACTIVE, (WPARAM)psa, 0);
+
+	cJSON_Delete(root);
 	return true;
 }
 

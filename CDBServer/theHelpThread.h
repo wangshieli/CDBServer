@@ -27,6 +27,15 @@ typedef struct _card_status
 	std::string strGROUP_TRANSACTIONID;
 }CARD_STATUS;
 
+#define MSG_SERV_ACTIVE	WM_USER + 102
+typedef struct _serv_active
+{
+	std::string strJrhm;
+	std::string strResult;
+	std::string strSmsg;
+	std::string strGROUP_TRANSACTIONID;
+}SERV_ACTIVE;
+
 
 #define MSG_NOTIFY_CONTRACT_ROOT WM_USER + 110
 typedef struct _notify_contract_root

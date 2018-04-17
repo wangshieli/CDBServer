@@ -23,4 +23,6 @@ bool doDisNumberResponse(void* bobj);
 
 bool doCardStatusResponse(void* bobj);
 
+bool doServActiveResponse(void* bobj);
+
 bool doPoolListResponse(void* bobj);

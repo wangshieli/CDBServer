@@ -13,14 +13,14 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 	{
 		switch (msg.message)
 		{
-		case MSG_DIS_NUMBER:
+		case MSG_DIS_NUMBER: // 停复机
 		{
 			DIS_NUMBER* pcs = (DIS_NUMBER*)msg.wParam;
 			// 主要进行日志记录
 			delete pcs;
 		}
 		break;
-		case MSG_CARD_STATUS:
+		case MSG_CARD_STATUS: // 卡状态更新
 		{
 			CARD_STATUS* pcs = (CARD_STATUS*)msg.wParam;
 			// 检查目前数据库卡状态，如果不相同就修改
@@ -30,6 +30,16 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 			ExecuteSql(sql);
 			
 			delete pcs;
+		}
+		break;
+		case MSG_SERV_ACTIVE: // 活卡激活
+		{
+			SERV_ACTIVE* psa = (SERV_ACTIVE*)msg.wParam;
+			if (atoi(psa->strResult.c_str()) == 0)
+			{
+
+			}
+			delete psa;
 		}
 		break;
 		case MSG_NOTIFY_CONTRACT_ROOT:
@@ -54,7 +64,16 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 			{}
 			break;
 			case 7:	// 活卡激活
-			{}
+			{
+				if (strcmp(pNcr->strStatusinfo.c_str(), "竣工") == 0)
+				{
+					const TCHAR* pSql = _T("UPDATE sim_tbl SET zt='在用' WHERE jrhm='%s'");
+					TCHAR sql[256];
+					_stprintf_s(sql, 256, pSql, pNcr->strAccnbr.c_str());
+					ExecuteSql(sql);
+				}
+				// 记录竣工日志
+			}
 			break;
 			case 8:	// 办理停机保号
 			{
@@ -99,6 +118,8 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 			default:
 				break;
 			}
+
+			delete pNcr;
 		}
 		break;
 		default:

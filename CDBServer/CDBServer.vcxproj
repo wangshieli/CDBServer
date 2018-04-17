@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="API_RequestComplete.h" />
+    <ClInclude Include="cJSON.h" />
     <ClInclude Include="Database_map.h" />
     <ClInclude Include="DBPool.h" />
     <ClInclude Include="DealHeadTail.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="doLltcData.h" />
     <ClInclude Include="doNcData.h" />
     <ClInclude Include="doPoolList.h" />
+    <ClInclude Include="doServActive.h" />
     <ClInclude Include="doSimData.h" />
     <ClInclude Include="doSsdqData.h" />
     <ClInclude Include="doUserData.h" />
@@ -186,6 +188,9 @@
   <ItemGroup>
     <ClCompile Include="API_RequestComplete.cpp" />
     <ClCompile Include="CDBServer.cpp" />
+    <ClCompile Include="cjson.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Database_map.cpp" />
     <ClCompile Include="DBPool.cpp" />
     <ClCompile Include="DealHeadTail.cpp" />
@@ -200,6 +205,7 @@
     <ClCompile Include="doLltcData.cpp" />
     <ClCompile Include="doNcData.cpp" />
     <ClCompile Include="doPoolList.cpp" />
+    <ClCompile Include="doServActive.cpp" />
     <ClCompile Include="doSimData.cpp" />
     <ClCompile Include="doSsdqData.cpp" />
     <ClCompile Include="doUserData.cpp" />

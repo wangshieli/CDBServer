@@ -37,9 +37,6 @@
     <Filter Include="业务处理\API\状态查询">
       <UniqueIdentifier>{f71183f9-e544-48f7-b10b-30d78b86802a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="XML">
-      <UniqueIdentifier>{0cde3a3d-8053-4b48-a05c-a22f7a310862}</UniqueIdentifier>
-    </Filter>
     <Filter Include="业务处理\API\流量池列表查询">
       <UniqueIdentifier>{9499fedb-ebf7-474d-b80d-0070f392c346}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,12 @@
     </Filter>
     <Filter Include="辅助线程">
       <UniqueIdentifier>{5c22f661-5b10-4898-9df6-524cf9510695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="格式化数据">
+      <UniqueIdentifier>{0cde3a3d-8053-4b48-a05c-a22f7a310862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="业务处理\API\活卡激活">
+      <UniqueIdentifier>{685c319f-9c48-40cb-b8bf-aefdca715c22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +163,7 @@
       <Filter>业务处理\API\状态查询</Filter>
     </ClInclude>
     <ClInclude Include="tinyxml2.h">
-      <Filter>XML</Filter>
+      <Filter>格式化数据</Filter>
     </ClInclude>
     <ClInclude Include="doAPIResponse.h">
       <Filter>业务处理\API</Filter>
@@ -188,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="theHelpThread.h">
       <Filter>辅助线程</Filter>
+    </ClInclude>
+    <ClInclude Include="cJSON.h">
+      <Filter>格式化数据</Filter>
+    </ClInclude>
+    <ClInclude Include="doServActive.h">
+      <Filter>业务处理\API\活卡激活</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -255,7 +264,7 @@
       <Filter>业务处理\API\状态查询</Filter>
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
-      <Filter>XML</Filter>
+      <Filter>格式化数据</Filter>
     </ClCompile>
     <ClCompile Include="doAPIResponse.cpp">
       <Filter>业务处理\API</Filter>
@@ -283,6 +292,12 @@
     </ClCompile>
     <ClCompile Include="theHelpThread.cpp">
       <Filter>辅助线程</Filter>
+    </ClCompile>
+    <ClCompile Include="cjson.c">
+      <Filter>格式化数据</Filter>
+    </ClCompile>
+    <ClCompile Include="doServActive.cpp">
+      <Filter>业务处理\API\活卡激活</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
