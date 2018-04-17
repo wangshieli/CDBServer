@@ -154,6 +154,8 @@ bool UniqueInstance();
 
 int GetRand();
 
+int error_info(BUFFER_OBJ* buffer, const TCHAR* format, ...);
+
 extern LPFN_ACCEPTEX lpfnAccpetEx;
 extern LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockaddrs;
 extern LPFN_CONNECTEX lpfnConnectEx;

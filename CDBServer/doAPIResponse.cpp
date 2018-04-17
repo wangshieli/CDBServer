@@ -124,11 +124,14 @@ void API_Failed(BUFFER_OBJ* bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(4);
+	_msgpack.pack_array(5);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(1);
 	_msgpack.pack(bobj->strJrhm);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(1);
+	_msgpack.pack(bobj->data);
 
 	DealTail(sbuf, bobj);
 }
@@ -370,8 +373,49 @@ bool doServActiveResponse(void* _bobj)
 //	"message" : "ok",
 //	"url" : http ://202.102.116.186:7001/NetPay/ePayAction.do?RequestValue=CC000E94924805D69D86DC1F990B5480906DD522E95FB446ACC93992A8E1BA1C328680881E11662DFD315608AF3A2E90374FA1E836B0E6BCDDCB941EF0000008BC8A626518D9B5F319D7AAB4649580534E788E7A5BA3975BF06F447ED6C0CE372F7F2B0A1AFB304E87C6D0426A2EBEE5F32649D9AD1F091A092F18F14F5EE12D6FAE31B687DF0AA4882319F2D02E2BEF05878F8C5C7F150EC11A69CB17C8787ED6922F5D1362452C9DAE9829CE9AE4BA942A1053FA3F27CBA650435822CF50374BDD69A19BDEAD63B52B1608215BA2F7526E6059C7EEF424E023AFE94A2E0000F0EB6C3810B163726A33752183F57BF7577A57645734B02CBF86D99D071B7AAC0D2CFE1B090E1830BB7650000F492E54DD24E418AE617BDCB9FD1692A7AA2E5298F7191F7831098195248888D1D601847B65E8C428560536B9BFB78056ED40A2A73F50F72AA6C97C0D63AD3805DE49
 //}
-bool doPay2Response(void* bobj)
+bool doPay2Response(void* _bobj)
 {
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	cJSON* root = NULL;
+	root = cJSON_Parse(pResponData);
+	if (NULL == root)
+	{
+		delete pResponData;
+		return false;
+	}
+	delete pResponData;
+
+	PAY2* pp2 = new PAY2;
+	pp2->strJrhm = bobj->strJrhm;
+	cJSON* status = cJSON_GetObjectItem(root, "status");
+	pp2->strStatus = status->valuestring;
+	cJSON* message = cJSON_GetObjectItem(root, "message");
+	pp2->strMessage = message->valuestring;
+	cJSON* url = cJSON_GetObjectItem(root, "url");
+	pp2->strUrl = url->valuestring;
+
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	_msgpack.pack_array(5);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->strJrhm);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(3);
+	_msgpack.pack(pp2->strStatus);
+	_msgpack.pack(pp2->strMessage);
+	_msgpack.pack(pp2->strUrl);
+
+	DealTail(sbuf, bobj);
+
+	PostThreadMessage(g_HelpThreadID, MSG_PAY2, (WPARAM)pp2, 0);
+
+	cJSON_Delete(root);
+
 	return true;
 }
 

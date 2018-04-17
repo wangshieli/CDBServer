@@ -36,6 +36,16 @@ typedef struct _serv_active
 	std::string strGROUP_TRANSACTIONID;
 }SERV_ACTIVE;
 
+#define MSG_PAY2	WM_USER + 103
+typedef struct _pay
+{
+	std::string strJrhm;
+	std::string strStatus;
+	std::string strMessage;
+	std::string strUrl;
+}PAY2;
+
+
 
 #define MSG_NOTIFY_CONTRACT_ROOT WM_USER + 110
 typedef struct _notify_contract_root

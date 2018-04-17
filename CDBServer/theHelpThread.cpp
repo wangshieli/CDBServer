@@ -42,6 +42,13 @@ unsigned int _stdcall theHeperFunction(LPVOID pVoid)
 			delete psa;
 		}
 		break;
+		case MSG_PAY2:
+		{
+			PAY2* pp2 = (PAY2*)msg.wParam;
+
+			delete pp2;
+		}
+		break;
 		case MSG_NOTIFY_CONTRACT_ROOT:
 		{
 			NOTIFY_CONTRACT_ROOT* pNcr = (NOTIFY_CONTRACT_ROOT*)msg.wParam;

@@ -29,3 +29,13 @@ int GetRand()
 {
 	return urand(randeg);
 }
+
+int error_info(BUFFER_OBJ* buffer, const TCHAR* format, ...)
+{
+	va_list va;
+	va_start(va, format);
+	int result = _vsntprintf_s(buffer->data, buffer->datalen, _TRUNCATE, format, va);
+
+	va_end(va);
+	return result;
+}

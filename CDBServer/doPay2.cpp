@@ -5,6 +5,9 @@
 #include "doAPIResponse.h"
 #include "DBPool.h"
 
+// sub_bank_id支付类型
+// pay_money充值金额
+// callbackURL完成跳转
 void DoPay2Data(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData);
 
 bool doPay2(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
@@ -18,7 +21,7 @@ bool doPay2(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 	case 1:
 	{
-		const TCHAR* pData = _T("GET /m2m_ec/app/pay.do?method=pay2&user_id=%s&passWord=%s&sub_bank_id=%s&pay_money=0.01&order_number=%s&funds_type=1&access_number=%s&sign=%s&callbackURL=%s&callURL=%s\r\n\r\n");
+		const TCHAR* pData = _T("GET /m2m_ec/app/pay.do?method=pay2&user_id=%s&passWord=%s&sub_bank_id=%s&pay_money=%s&order_number=%s&funds_type=1&access_number=%s&sign=%s&callbackURL=%s&callURL=%s\r\n\r\n");
 		DoPay2Data(pObj, bobj, pData);
 	}
 	break;
