@@ -17,6 +17,7 @@ public:
 	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
+	MYSQL_RES* res;
 	int nRecSetCount;
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;
@@ -36,6 +37,7 @@ public:
 		pfndoApiResponse = NULL;
 		pRelatedSObj = NULL;
 		ReleaseRecorder();
+		res = NULL;
 		nRecSetCount = 0;
 		dwRecvedCount = 0;
 		dwSendedCount = 0;
@@ -74,6 +76,7 @@ public:
 	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
+	MYSQL_RES* res;
 	int nRecSetCount;
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;

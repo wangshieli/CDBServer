@@ -12,3 +12,7 @@ void ReleaseRecorder(_RecordsetPtr& pRecorder);
 _ConnectionPtr* AllocTransConner();
 
 void FreeConner(_ConnectionPtr* pConner);
+
+MYSQL* Mysql_AllocConnection();
+
+void Mysql_BackToPool(MYSQL* pMysql);

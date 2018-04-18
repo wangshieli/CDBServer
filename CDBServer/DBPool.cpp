@@ -402,3 +402,169 @@ _ConnectionPtr* AllocTransConner()
 
 	return pConner;
 }
+
+
+typedef std::vector<MYSQL* > T_MYSQL_LINK;
+T_MYSQL_LINK vctLink;
+CRITICAL_SECTION cs;
+HANDLE hWaitConnection = NULL;
+int g_nMinConnection = 0;
+int g_nMaxConnection = 0;
+int g_nCurrentCount = 0;
+
+bool Mysql_ConnetDB(MYSQL** pMysql)
+{
+	*pMysql = mysql_init((MYSQL*)NULL);
+	if (NULL == *pMysql)
+		return false;
+
+	UINT ml_outime = 5;
+	mysql_options(*pMysql, MYSQL_OPT_CONNECT_TIMEOUT, &ml_outime);
+
+	if (NULL == mysql_real_connect(*pMysql, _T("localhost"), DB_USER, DB_PWD, DB_NAME, 0, NULL, 0))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Mysql_CloseConnection(MYSQL** pMysql)
+{
+	if (NULL != *pMysql)
+	{
+		mysql_close(*pMysql);
+		*pMysql = NULL;
+	}
+}
+
+bool Mysql_InitConnectionPool(int nMin, int nMax)
+{
+	static bool bInitial = true;
+	if (bInitial)
+	{
+		InitializeCriticalSection(&cs);
+		hWaitConnection = CreateEvent(NULL, TRUE, FALSE, NULL);
+		g_nMinConnection = nMin;
+		g_nMaxConnection = nMax;
+		for (int i = 0; i < nMin; i++)
+		{
+			MYSQL* pMysql = NULL;
+			if (!Mysql_ConnetDB(&pMysql))
+			{
+				Mysql_CloseConnection(&pMysql);
+				continue;
+			}
+			EnterCriticalSection(&cs);
+			vctLink.push_back(pMysql);
+			++g_nCurrentCount;
+			LeaveCriticalSection(&cs);
+		}
+		bInitial = false;
+	}
+	return !bInitial;
+}
+
+void Mysql_RemoveFromPool(MYSQL** pMysql)
+{
+	if (NULL != *pMysql)
+	{
+		mysql_close(*pMysql);
+		*pMysql = NULL;
+	}
+
+	EnterCriticalSection(&cs);
+	--g_nCurrentCount;
+	LeaveCriticalSection(&cs);
+}
+
+MYSQL* Mysql_AllocConnection()
+{
+	while (true)
+	{
+		MYSQL* pMysql = NULL;
+		EnterCriticalSection(&cs);
+		if (vctLink.empty())
+		{
+			if (g_nCurrentCount < g_nMaxConnection)
+			{
+				if (!Mysql_ConnetDB(&pMysql))
+				{
+					LeaveCriticalSection(&cs);
+					Mysql_CloseConnection(&pMysql);
+					return pMysql;
+				}
+				else
+				{
+					++g_nCurrentCount;
+				}
+			}
+			else
+			{
+				ResetEvent(hWaitConnection);
+				LeaveCriticalSection(&cs);
+				WaitForSingleObject(hWaitConnection, INFINITE);
+				continue;
+			}
+		}
+		else
+		{
+			pMysql = vctLink.back();
+			vctLink.pop_back();
+		}
+		LeaveCriticalSection(&cs);
+
+		if (0 != mysql_ping(pMysql))
+		{
+			Mysql_CloseConnection(&pMysql);
+			if (!Mysql_ConnetDB(&pMysql))
+			{
+				Mysql_RemoveFromPool(&pMysql);
+			}
+		}
+
+		return pMysql;
+	}
+}
+
+void Mysql_BackToPool(MYSQL* pMysql)
+{
+	EnterCriticalSection(&cs);
+	vctLink.push_back(pMysql);
+	LeaveCriticalSection(&cs);
+	SetEvent(hWaitConnection);
+}
+
+void test()
+{
+	MYSQL_RES* res = NULL;
+	int nStart = 0;
+	if (NULL == res)
+	{
+		MYSQL* pMysql = Mysql_AllocConnection();
+		if (NULL == pMysql)
+		{
+			// Êý¾Ý¿â´íÎó
+		}
+
+		const TCHAR* pSql = _T("SELECT id,jrhm,iccid,dxzh,khmc,jlxm,zt,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz FROM sim_tbl");
+		size_t len = _tcslen(pSql);
+		if (0 != mysql_real_query(pMysql, pSql, (ULONG)len))
+		{
+			// ²éÑ¯´íÎó
+		}
+
+		my_ulonglong ulCount = mysql_affected_rows(pMysql);
+
+		res = mysql_store_result(pMysql);
+
+		Mysql_BackToPool(pMysql);
+	}
+
+	MYSQL_ROW row;
+	mysql_data_seek(res, nStart);
+	while (row = mysql_fetch_row(res))
+	{
+		_tprintf(_T("%s : %s : %s\n"), row[0], row[1], row[2]);
+	}
+}

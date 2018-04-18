@@ -97,6 +97,18 @@
     <Filter Include="业务处理\API\活卡激活">
       <UniqueIdentifier>{685c319f-9c48-40cb-b8bf-aefdca715c22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="新业务处理模块">
+      <UniqueIdentifier>{c8d52d76-6de9-413e-85ba-cec856f9814b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="新业务处理模块\客户端">
+      <UniqueIdentifier>{d3d7342a-1de9-4589-9b24-8429b0017167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="新业务处理模块\客户端\用户信息">
+      <UniqueIdentifier>{b6ed9a95-d5b6-4321-ba79-0d57f7428218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="新业务处理模块\客户端\用户信息\数据库操作">
+      <UniqueIdentifier>{f1a8d556-e317-4694-bcdc-5dc3385a687d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -201,6 +213,9 @@
     <ClInclude Include="doPay2.h">
       <Filter>业务处理\API\三码充值</Filter>
     </ClInclude>
+    <ClInclude Include="db_user.h">
+      <Filter>新业务处理模块\客户端\用户信息\数据库操作</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -304,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="doPay2.cpp">
       <Filter>业务处理\API\三码充值</Filter>
+    </ClCompile>
+    <ClCompile Include="db_user.cpp">
+      <Filter>新业务处理模块\客户端\用户信息\数据库操作</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
