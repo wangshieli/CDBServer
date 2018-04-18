@@ -65,7 +65,20 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 		&localAddr, &localAddrlen,
 		&remoteAddr, &remoteAddrlen);
 
-	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	DWORD i;
+	bool bFind;
+	i = 0;
+	bFind = false;
+	for (; i < c_bobj->dwRecvedCount; i++)
+	{
+		if (c_bobj->data[i] == 0x0d)
+		{
+			bFind = true;
+			break;
+		}
+	}
+	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	if (!bFind)
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
@@ -76,6 +89,7 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 	}
 	else
 	{
+		c_bobj->dwRecvedCount = i + 1;
 		ProcessCommand(c_bobj);
 	}
 
@@ -146,7 +160,18 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
 	c_bobj->dwRecvedCount += dwTransion;
-	if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	DWORD i = 0;
+	bool bFind = false;
+	for (; i < c_bobj->dwRecvedCount; i++)
+	{
+		if (c_bobj->data[i] == 0x0d)
+		{
+			bFind = true;
+			break;
+		}
+	}
+	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	if (!bFind)
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
@@ -159,8 +184,24 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	}
 	else
 	{
+		c_bobj->dwRecvedCount = i + 1;
 		ProcessCommand(c_bobj);
 	}
+	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
+	//{
+	//	c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
+	//	if (!PostZeroRecv(c_sobj, c_bobj))
+	//	{
+	//		CSCloseSocket(c_sobj);
+	//		freeSObj(c_sobj);
+	//		freeBObj(c_bobj);
+	//		return;
+	//	}
+	//}
+	//else
+	//{
+	//	ProcessCommand(c_bobj);
+	//}
 }
 
 void SendCompFailed(void* _sobj, void* _bobj)
