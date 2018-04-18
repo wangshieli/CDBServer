@@ -12,7 +12,7 @@
 
 concurrent_hash_map<int, SOCKET_OBJ*> ConnMap;
 
-WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
+//WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
 
 void InsertConn(SOCKET_OBJ* sobj)
 {

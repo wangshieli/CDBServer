@@ -56,7 +56,7 @@ void DoServActiveData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pDat
 	_variant_t var_key = bobj->pRecorder->GetCollect("skey");
 	std::string key((const char*)(_bstr_t)var_key);
 	std::string method = _T("requestServActive");
-//	WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
+	WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
 	_variant_t varPwd = ep->strEnc((const char*)(_bstr_t)var_pwd, key.substr(0, 3).c_str(), key.substr(3, 3).c_str(), key.substr(6, 3).c_str());
 	_variant_t varSign = ep->strEncSign4(bobj->strJrhm.c_str(), (const char*)(_bstr_t)var_userid, (const char*)(_bstr_t)var_pwd, method.c_str(),
 		key.substr(0, 3).c_str(), key.substr(3, 3).c_str(), key.substr(6, 3).c_str());

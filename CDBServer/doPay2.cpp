@@ -70,7 +70,7 @@ void DoPay2Data(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData)
 	std::string funds_type;
 	std::string callbackURL;
 
-//	WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
+	WOTEDUtils::EncInterfacePtr ep(__uuidof(DesUtils));
 	_variant_t varPwd = ep->strEnc((const char*)(_bstr_t)var_pwd, key.substr(0, 3).c_str(), key.substr(3, 3).c_str(), key.substr(6, 3).c_str());
 	_variant_t varSign = ep->strEncSign9(bobj->strJrhm.c_str(), (const char*)(_bstr_t)var_userid, (const char*)(_bstr_t)var_pwd, method.c_str(),
 		order_number, sub_bank_id.c_str(), pay_money.c_str(), funds_type.c_str(),

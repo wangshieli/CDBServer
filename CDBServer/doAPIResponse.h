@@ -6,7 +6,7 @@
 #endif // _DEBUG
 using namespace WOTEDUtils;
 
-extern WOTEDUtils::EncInterfacePtr ep;
+//extern WOTEDUtils::EncInterfacePtr ep;
 
 void InsertConn(SOCKET_OBJ* sobj);
 void RemoveConn(SOCKET_OBJ* sobj);
