@@ -122,3 +122,33 @@ void InitMsgpack(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRe
 	_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
 	bobj->pRecorder->Move(nStart, _variant_t((long)adBookmarkFirst));
 }
+
+int CheckRecvdata(BUFFER_OBJ* bobj)
+{
+	if (bobj->dwRecvedCount < 6)
+		return 0;
+
+	if ((UCHAR)bobj->data[0] != 0xfb || (UCHAR)bobj->data[1] != 0xfc)//  没有数据开始标志
+	{
+		//closesocket(sock);
+		//sock = INVALID_SOCKET;
+		return -1;
+	}
+
+	DWORD dwFrameLen = *(INT*)(bobj->data + 2);
+	if ((dwFrameLen + 8) > bobj->dwRecvedCount)
+		return 0;
+
+	byte nSum = bobj->data[6 + dwFrameLen];
+	if (nSum != csum((unsigned char*)bobj->data + 6, dwFrameLen))
+	{
+		return -1;
+	}
+
+	if (0x0d != bobj->data[dwFrameLen + 7])
+	{
+		return -1;
+	}
+	bobj->dwRecvedCount = dwFrameLen;
+	return dwFrameLen;
+}

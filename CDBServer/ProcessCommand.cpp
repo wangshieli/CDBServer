@@ -16,17 +16,17 @@
 
 int ProcessCommand(BUFFER_OBJ* bobj)
 {
-	int nFrameLen = 0;
-	if (!(nFrameLen = DealHead(bobj)))
-		return false;
+	//int nFrameLen = 0;
+	//if (!(nFrameLen = DealHead(bobj)))
+	//	return false;
 
 	try
 	{
 		msgpack::unpacker unpack_;
 		msgpack::object_handle result_;
 		unpack_.reserve_buffer(bobj->dwRecvedCount);
-		memcpy_s(unpack_.buffer(), bobj->dwRecvedCount, bobj->data + 6, nFrameLen);
-		unpack_.buffer_consumed(nFrameLen);
+		memcpy_s(unpack_.buffer(), bobj->dwRecvedCount, bobj->data + 6, bobj->dwRecvedCount/*nFrameLen*/);
+		unpack_.buffer_consumed(bobj->dwRecvedCount/*nFrameLen*/);
 		unpack_.next(result_);
 		if (msgpack::type::ARRAY != result_.get().type)
 		{

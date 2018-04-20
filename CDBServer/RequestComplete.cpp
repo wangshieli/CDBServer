@@ -9,6 +9,8 @@ struct tcp_keepalive alive_in = { TRUE, 1000 * 10, 1000 };
 struct tcp_keepalive alive_out = { 0 };
 unsigned long ulBytesReturn = 0;
 
+extern int CheckRecvdata(BUFFER_OBJ* bobj);
+
 void AcceptCompFailed(void* _lobj, void* _c_obj)
 {
 	LISTEN_OBJ* lobj = (LISTEN_OBJ*)_lobj;
@@ -65,20 +67,9 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 		&localAddr, &localAddrlen,
 		&remoteAddr, &remoteAddrlen);
 
-	DWORD i;
-	bool bFind;
-	i = 0;
-	bFind = false;
-	for (; i < c_bobj->dwRecvedCount; i++)
-	{
-		if (c_bobj->data[i] == 0x0d)
-		{
-			bFind = true;
-			break;
-		}
-	}
-	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
-	if (!bFind)
+	int Ret;
+	Ret = CheckRecvdata(c_bobj);
+	if (0 == Ret)
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
@@ -87,9 +78,12 @@ void AcceptCompSuccess(DWORD dwTranstion, void* _lobj, void* _c_bobj)
 			goto error;
 		}
 	}
+	else if (-1 == Ret)
+	{
+		goto error;
+	}
 	else
 	{
-		c_bobj->dwRecvedCount = i + 1;
 		ProcessCommand(c_bobj);
 	}
 
@@ -160,48 +154,31 @@ void RecvCompSuccess(DWORD dwTransion, void* _sobj, void* _bobj)
 	BUFFER_OBJ* c_bobj = (BUFFER_OBJ*)_bobj;
 
 	c_bobj->dwRecvedCount += dwTransion;
-	DWORD i = 0;
-	bool bFind = false;
-	for (; i < c_bobj->dwRecvedCount; i++)
-	{
-		if (c_bobj->data[i] == 0x0d)
-		{
-			bFind = true;
-			break;
-		}
-	}
-	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
-	if (!bFind)
+
+	int Ret = CheckRecvdata(c_bobj);
+	if (0 == Ret)
 	{
 		c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
 		if (!PostZeroRecv(c_sobj, c_bobj))
 		{
+			_tprintf(_T("客户端信息接收失败, errCode = %d\n"), WSAGetLastError());
 			CSCloseSocket(c_sobj);
 			freeSObj(c_sobj);
 			freeBObj(c_bobj);
 			return;
 		}
 	}
+	else if (-1 == Ret)
+	{
+		CSCloseSocket(c_sobj);
+		freeSObj(c_sobj);
+		freeBObj(c_bobj);
+		return;
+	}
 	else
 	{
-		c_bobj->dwRecvedCount = i + 1;
 		ProcessCommand(c_bobj);
 	}
-	//if (NULL == memchr(c_bobj->data + c_bobj->dwRecvedCount - 1, 0x0d, 1))
-	//{
-	//	c_bobj->SetIoRequestFunction(RecvZeroCompFailed, RecvZeroCompSuccess);
-	//	if (!PostZeroRecv(c_sobj, c_bobj))
-	//	{
-	//		CSCloseSocket(c_sobj);
-	//		freeSObj(c_sobj);
-	//		freeBObj(c_bobj);
-	//		return;
-	//	}
-	//}
-	//else
-	//{
-	//	ProcessCommand(c_bobj);
-	//}
 }
 
 void SendCompFailed(void* _sobj, void* _bobj)
