@@ -126,14 +126,14 @@ void API_Failed(BUFFER_OBJ* bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(5);
+	_msgpack.pack_array(4);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
 	_msgpack.pack(1);
 	_msgpack.pack(bobj->strJrhm);
-	_msgpack.pack_array(1);
-	_msgpack.pack_array(1);
-	_msgpack.pack(bobj->data);
+	//_msgpack.pack_array(1);
+	//_msgpack.pack_array(1);
+	//_msgpack.pack(bobj->data);
 
 	DealTail(sbuf, bobj);
 }

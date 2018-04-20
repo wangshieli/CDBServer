@@ -39,16 +39,14 @@ bool doSimData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		std::string strBz = (pDataObj++)->as<std::string>();
 		double dj = (pDataObj++)->as<double>();
 
-//		const TCHAR* pSql = _T("INSERT INTO sim_tbl (id,jrhm,iccid,dxzh,khmc,jlxm,llchm,llclx,dj,xsrq,jhrq,xfrq,dqrq,zxrq,bz) \
-//VALUES(null,'%s','%s','%s','%s','%s') ON DUPLICATE KEY UPDATE iccid='%s',jrhm='%s',dxzh='%s'");
-		const TCHAR* pSql = _T("insert into sim_tbl (id,jrhm,iccid,jlxm,lltc,dxzh,jhrq,zt,ssdq,khmc,llchm,xsrq,dqrq,xfrq,zxrq,bz,dj) \
-value(null,'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',%lf,'%s')\
- ON DUPLICATE KEY UPDATE jlxm='%s',lltc='%s',dxzh='%s',jhrq='%s',zt='%s',ssdq='%s',khmc='%s',llchm='%s',xsrq='%s',dqrq='%s',xfrq='%s',zxrq='%s',bz='%s',dj=%lf");
-		TCHAR sql[256];
+		const TCHAR* pSql = _T("insert into sim_tbl (id,jrhm,iccid,dxzh,llchm) \
+value(null,'%s','%s','%s','%s')\
+ ON DUPLICATE KEY UPDATE jlxm='%s',lltc='%s'',zt='%s',ssdq='%s',khmc='%s',xsrq='%s',bz='%s',dj=%lf");
+		TCHAR sql[512];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strJrhm.c_str(), strIccid.c_str(), strJlxm.c_str(), strLltc.c_str(), strDxzh.c_str(), strJhrq.c_str(), strZt.c_str(), strSsdq.c_str(), stKhmc.c_str(),
-			strLlchm.c_str(), strXsrq.c_str(), strDqrq.c_str(), strXfrq.c_str(), strZxrq.c_str(), strBz.c_str(), dj, strJlxm.c_str(), strLltc.c_str(), strDxzh.c_str(), strJhrq.c_str(), strZt.c_str(), strSsdq.c_str(), stKhmc.c_str(),
-			strLlchm.c_str(), strXsrq.c_str(), strDqrq.c_str(), strXfrq.c_str(), strZxrq.c_str(), strBz.c_str(), dj);
+		_stprintf_s(sql, 512, pSql, strJrhm.c_str(), strIccid.c_str(), strDxzh.c_str(), strLlchm.c_str(),
+			strJlxm.c_str(), strLltc.c_str(), strZt.c_str(), strSsdq.c_str(), stKhmc.c_str(),
+			 strXsrq.c_str(), strBz.c_str(), dj);
 
 		if (!ExecuteSql(sql))
 		{
