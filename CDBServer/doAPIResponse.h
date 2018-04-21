@@ -29,4 +29,8 @@ bool doServActiveResponse(void* bobj);
 
 bool doPay2Response(void* bobj);
 
-bool doPoolListResponse(void* bobj);
+bool doPoolList01Response(void* bobj);
+
+bool doPoolList02Response(void* bobj);
+
+bool doPoolList03Response(void* bobj);

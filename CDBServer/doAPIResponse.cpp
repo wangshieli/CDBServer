@@ -9,6 +9,7 @@
 #include "theHelpThread.h"
 #include "tinyxml2.h"
 #include "cJSON.h"
+#include "DBPool.h"
 
 concurrent_hash_map<int, SOCKET_OBJ*> ConnMap;
 
@@ -433,7 +434,164 @@ bool doPay2Response(void* _bobj)
 //			<eff_date>2016-02-19</eff_date>
 //		</pool>
 //	</poolList>
-bool doPoolListResponse(void* bobj)
+bool doPoolList01Response(void* _bobj)
 {
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	tinyxml2::XMLDocument doc;
+	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))
+	{
+		delete pResponData;
+		return false;
+	}
+	delete pResponData;
+
+	std::vector<PL_01*> vctP1;
+	tinyxml2::XMLElement* poollist = doc.RootElement();
+	tinyxml2::XMLElement* pool = poollist->FirstChildElement();
+	while (pool)
+	{
+		PL_01* p1 = new PL_01;
+		tinyxml2::XMLElement* create_data = pool->FirstChildElement(); // <create_date>2016 - 02 - 19< / create_date>
+		p1->create_data = create_data->GetText();
+		tinyxml2::XMLElement* pool_infoUnit = create_data->NextSiblingElement(); // <pool_infoUnit>GB</pool_infoUnit>
+		p1->pool_infoUnit = pool_infoUnit->GetText();
+		tinyxml2::XMLElement* state = pool_infoUnit->NextSiblingElement(); // <state>在用</state>
+		p1->state = state->GetText();
+		tinyxml2::XMLElement* pool_info = state->NextSiblingElement(); // <pool_info>10</pool_info>
+		p1->pool_info = pool_info->GetText();
+		tinyxml2::XMLElement* exp_date = pool_info->NextSiblingElement(); // <exp_date>3000-01-01</exp_date>
+		p1->exp_date = exp_date->GetText();
+		tinyxml2::XMLElement* acc_nbr = exp_date->NextSiblingElement(); // <acc_nbr>50LLC04244</acc_nbr>
+		p1->acc_nbr = acc_nbr->GetText();
+		tinyxml2::XMLElement* eff_date = acc_nbr->NextSiblingElement(); // <eff_date>2016-02-19</eff_date>
+		p1->eff_date = eff_date->GetText();
+
+		vctP1.push_back(p1);
+
+		pool = pool->NextSiblingElement();
+	}
+
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	int nSize = vctP1.size();
+
+	
+	_msgpack.pack_array(5);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack_array(nSize);
+	while (!vctP1.empty())
+	{
+		PL_01* p1 = vctP1.back();
+		vctP1.pop_back();
+		_msgpack.pack_array(7);
+		_msgpack.pack(p1->create_data);
+		_msgpack.pack(p1->pool_infoUnit);
+		_msgpack.pack(p1->state);
+		_msgpack.pack(p1->pool_info);
+		_msgpack.pack(p1->exp_date);
+		_msgpack.pack(p1->acc_nbr);
+		_msgpack.pack(p1->eff_date);
+		delete p1;
+	}
+
+	DealTail(sbuf, bobj);
+
+	//PostThreadMessage(g_HelpThreadID, MSG_CARD_STATUS, (WPARAM)pcs, 0);// 进行数据库操作
+
+	return true;
+}
+
+//<?xml version = "1.0" encoding = "utf-8"?>
+//<SvcCont>
+//	<pageIndex>1</pageIndex>
+//	<OutProdInfos>
+//		<acc_nbr>1064910000000</acc_nbr>
+//		<eff_date>2016/03/08 15:03:28</eff_date>
+//		<flow_quota>0</flow_quota>
+//		<org_id>8320100</org_id>
+//		<quota_type>1</quota_type>
+//		<state>在用</state>
+//	</OutProdInfos>
+//	<resultCode>0</resultCode>
+//	<resultMsg>成功</resultMsg>
+//	<totalPage>360</totalPage>
+//	<GROUP_TRANSACTIONID>1000000252201606165545289689</GROUP_TRANSACTIONID>
+//</SvcCont>
+bool doPoolList02Response(void* _bobj)
+{
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	tinyxml2::XMLDocument doc;
+	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))
+	{
+		delete pResponData;
+		return false;
+	}
+	delete pResponData;
+
+	return true;
+}
+
+extern void PackCollectDate(msgpack::packer<msgpack::sbuffer>& _msgpack, const _variant_t& var, bool bDateTime = true);
+//<?xml version = "1.0"?>
+//<SvcCont>
+//	<IRESULT>0</IRESULT>
+//	<pool_already>458422599</pool_already>
+//	<pool_left>71108281</pool_left>
+//	<pool_total>529530880</pool_total>
+//	<GROUP_TRANSACTIONID>1000000190201804216859677554</GROUP_TRANSACTIONID>
+//</SvcCont>
+bool doPoolList03Response(void* _bobj)
+{
+	BUFFER_OBJ* bobj = (BUFFER_OBJ*)_bobj;
+	TCHAR* pResponData = Utf8ConvertAnsi(bobj->data, bobj->dwRecvedCount);
+	tinyxml2::XMLDocument doc;
+	if (tinyxml2::XML_SUCCESS != doc.Parse(pResponData))
+	{
+		delete pResponData;
+		return false;
+	}
+	delete pResponData;
+
+	tinyxml2::XMLElement* SvcCont = doc.RootElement();
+	tinyxml2::XMLElement* IRESULT = SvcCont->FirstChildElement();
+	tinyxml2::XMLElement* pool_already = IRESULT->FirstChildElement(); 
+	tinyxml2::XMLElement* pool_left = pool_already->NextSiblingElement();
+	tinyxml2::XMLElement* pool_total = pool_left->NextSiblingElement(); 
+	tinyxml2::XMLElement* GROUP_TRANSACTIONID = pool_total->NextSiblingElement(); 
+
+	const TCHAR* pSql = _T("SELECT COUNT(*) as num FROM sim_tbl WHERE llchm='%s'");
+	TCHAR sql[256];
+	memset(sql, 0x00, sizeof(pSql));
+	_stprintf_s(sql, sizeof(sql), pSql, bobj->strJrhm.c_str());
+	if (!Select_From_Tbl(sql, bobj->pRecorder))
+	{
+		return false;
+	}
+	_variant_t num = bobj->pRecorder->GetCollect("num");
+
+	msgpack::sbuffer sbuf;
+	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
+	sbuf.write("\xfb\xfc", 6);
+
+	_msgpack.pack_array(4);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(0);
+	_msgpack.pack_array(1);
+	_msgpack.pack_array(5);
+	PackCollectDate(_msgpack, num); // 流量池成员数量
+	_msgpack.pack(atoi(IRESULT->GetText()));// 执行成功
+	_msgpack.pack(pool_already->GetText()); // 已经使用的流量
+	_msgpack.pack(pool_left->GetText()); // 剩余的流量
+	_msgpack.pack(pool_total->GetText()); // 总流量
+
+	DealTail(sbuf, bobj);
+
 	return true;
 }

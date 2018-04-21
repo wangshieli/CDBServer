@@ -45,6 +45,17 @@ typedef struct _pay
 	std::string strUrl;
 }PAY2;
 
+typedef struct _pl_01
+{
+	std::string create_data; // <create_date>2016 - 02 - 19< / create_date>
+	std::string pool_infoUnit; // <pool_infoUnit>GB</pool_infoUnit>
+	std::string state; // <state>‘⁄”√</state>
+	std::string pool_info; // <pool_info>10</pool_info>
+	std::string exp_date; // <exp_date>3000-01-01</exp_date>
+	std::string acc_nbr; // <acc_nbr>50LLC04244</acc_nbr>
+	std::string eff_date; // <eff_date>2016-02-19</eff_date>
+}PL_01;
+
 
 
 #define MSG_NOTIFY_CONTRACT_ROOT WM_USER + 110

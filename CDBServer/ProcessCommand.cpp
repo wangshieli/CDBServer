@@ -13,6 +13,7 @@
 #include "ExcelLoad.h"
 #include "doSsdqData.h"
 #include "doDisabledNumber.h"
+#include "doPoolList.h"
 
 int ProcessCommand(BUFFER_OBJ* bobj)
 {
@@ -85,6 +86,12 @@ int ProcessCommand(BUFFER_OBJ* bobj)
 		{
 			doDisabledNumber(result_, bobj);
 		}
+		break;
+		case POOL_LIST_DATA:
+		{
+			doGetPoolList(result_, bobj);
+		}
+		break;
 		default:
 			break;
 		}
