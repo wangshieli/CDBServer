@@ -60,6 +60,7 @@ bool doDxzhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case DXZH_LIST:
 	{
+		bobj->nSubSubCmd = (pObj++)->as<int>();
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 

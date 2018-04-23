@@ -56,6 +56,7 @@ bool doSsdqData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case SSDQ_LIST:
 	{
+		bobj->nSubSubCmd = (pObj++)->as<int>();
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 

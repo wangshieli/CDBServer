@@ -127,6 +127,7 @@ bool doKhjlData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case KHJL_LIST:
 	{
+		bobj->nSubSubCmd = (pObj++)->as<int>();
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 

@@ -55,6 +55,7 @@ bool doLltcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case LLTC_LIST:
 	{
+		bobj->nSubSubCmd = (pObj++)->as<int>();
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 

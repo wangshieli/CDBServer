@@ -12,7 +12,7 @@ bool doGetPoolList(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
 	bobj->nSubCmd = (pObj++)->as<int>();
-	
+	bobj->nSubSubCmd = (pObj++)->as<int>();
 
 	switch (bobj->nSubCmd)
 	{

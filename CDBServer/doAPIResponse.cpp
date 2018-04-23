@@ -127,9 +127,10 @@ void API_Failed(BUFFER_OBJ* bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(4);
+	_msgpack.pack_array(5);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(bobj->nSubSubCmd);
 	_msgpack.pack(1);
 	_msgpack.pack(bobj->strJrhm);
 	//_msgpack.pack_array(1);
@@ -217,15 +218,16 @@ bool doDisNumberResponse(void* _bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(5);
+	_msgpack.pack_array(6);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(bobj->nSubSubCmd);
 	_msgpack.pack(0);
 	_msgpack.pack(bobj->strJrhm);
 	_msgpack.pack_array(1);
 	_msgpack.pack_array(4);
-	_msgpack.pack(pds->strRsptype);
-	_msgpack.pack(pds->strResult);
+	_msgpack.pack(atoi(pds->strRsptype.c_str()));
+	_msgpack.pack(atoi(pds->strResult.c_str()));
 	_msgpack.pack(pds->strResultMsg);
 	_msgpack.pack(pds->strGROUP_TRANSACTIONID);
 
@@ -299,9 +301,10 @@ bool doCardStatusResponse(void* _bobj)
 	msgpack::packer<msgpack::sbuffer> _msgpack(&sbuf);
 	sbuf.write("\xfb\xfc", 6);
 
-	_msgpack.pack_array(5);
+	_msgpack.pack_array(6);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(bobj->nSubSubCmd);
 	_msgpack.pack(0);
 	_msgpack.pack(bobj->strJrhm);
 	_msgpack.pack_array(1);

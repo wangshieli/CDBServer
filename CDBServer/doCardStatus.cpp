@@ -12,6 +12,7 @@ bool doCardStatus(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	msgpack::object* pObj = pCmdInfo.get().via.array.ptr;
 	++pObj;
 	bobj->nSubCmd = (pObj++)->as<int>();
+	bobj->nSubSubCmd = (pObj++)->as<int>();
 	bobj->pfndoApiResponse = doCardStatusResponse;
 
 	switch (bobj->nSubCmd)
@@ -44,7 +45,8 @@ void DoCSData(msgpack::object* pObj, BUFFER_OBJ* bobj, const TCHAR* pData)
 	bobj->strJrhm = (pDataObj++)->as<std::string>();
 	std::string dxzh = (pDataObj++)->as<std::string>();
 
-	const TCHAR* pSql = _T("SELECT userid,pwd,skey FROM dxzh_tbl WHERE dxzh='%s'");
+//	const TCHAR* pSql = _T("SELECT userid,pwd,skey FROM dxzh_tbl WHERE dxzh='%s'");
+	const TCHAR* pSql = _T("SELECT userid,pwd,skey FROM dxzh_tbl WHERE dxzh LIKE '%%%s%%'");
 	TCHAR sql[256];
 	memset(sql, 0x00, 256);
 	_stprintf_s(sql, 256, pSql, dxzh.c_str());

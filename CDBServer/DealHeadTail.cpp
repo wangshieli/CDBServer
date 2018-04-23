@@ -96,9 +96,10 @@ bool ErrorInfo(msgpack::sbuffer& sBuf, msgpack::packer<msgpack::sbuffer>& _msgpa
 	}
 	else
 	{
-		_msgpack.pack_array(5);
+		_msgpack.pack_array(6);
 		_msgpack.pack(bobj->nCmd);
 		_msgpack.pack(bobj->nSubCmd);
+		_msgpack.pack(bobj->nSubSubCmd);
 		_msgpack.pack(nTag);
 		_msgpack.pack(1);
 		_msgpack.pack(0);
@@ -110,9 +111,10 @@ bool ErrorInfo(msgpack::sbuffer& sBuf, msgpack::packer<msgpack::sbuffer>& _msgpa
 
 void InitMsgpack(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder, BUFFER_OBJ* bobj, int nPage, int nTag)
 {
-	_msgpack.pack_array(6);
+	_msgpack.pack_array(7);
 	_msgpack.pack(bobj->nCmd);
 	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(bobj->nSubSubCmd);
 	_msgpack.pack(nTag);
 	_msgpack.pack(0);
 	_msgpack.pack(bobj->nRecSetCount);

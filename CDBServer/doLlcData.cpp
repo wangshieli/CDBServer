@@ -58,6 +58,7 @@ bool doLlcData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 	case LLC_LIST:
 	{
+		bobj->nSubSubCmd = (pObj++)->as<int>();
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 
