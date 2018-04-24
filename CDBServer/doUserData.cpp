@@ -30,9 +30,9 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		unsigned int nFatherid  = (pDataObj++)->as<unsigned int>();
 		double nDj = (pDataObj++)->as<double>();
 		std::string strKhmc = (pDataObj++)->as<std::string>();
-		std::string strJlxm = (pDataObj++)->as<std::string>();
-		std::string strLxfs = (pDataObj++)->as<std::string>();
-		std::string strSsdq = (pDataObj++)->as<std::string>();
+		//std::string strJlxm = (pDataObj++)->as<std::string>();
+		//std::string strLxfs = (pDataObj++)->as<std::string>();
+		//std::string strSsdq = (pDataObj++)->as<std::string>();
 
 		const TCHAR* pSql = _T("INSERT INTO user_tbl (%s) VALUES(null,'%s','%s',%d,%d,%u,%f,now())");
 		TCHAR sql[256];
@@ -63,23 +63,14 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		my_ulonglong nIndex = mysql_insert_id(pMysql);
 
-		pSql = _T("INSERT INTO kh_tbl (id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq) VALUES(null,'%s',%u,%d,%u,'%s',%f,'%s','%s'))");
+		pSql = _T("UPDATE TABLE kh_tbl SET Userid=%u WHERE khmc='%s'");
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, sizeof(sql), pSql, strKhmc.c_str(),(unsigned int)nIndex,nUsertype,nFatherid,strJlxm.c_str(),nDj,strLxfs.c_str(),strSsdq.c_str());
-		if (!InsertIntoTbl(sql, pMysql))
+		_stprintf_s(sql, sizeof(sql), pSql, (unsigned int)nIndex, strKhmc.c_str());
+		if (!UpdateTbl(sql, pMysql, bobj))
 		{
-			UINT uError = mysql_errno(pMysql);
-			if (uError == 1062)
-			{
-				error_info(bobj, _T("已经存在的客户名称"));
-			}
-			else
-			{
-				error_info(bobj, _T("数据库异常 ErrorCode = %08x, ErrorMsg = %s"), uError, mysql_error(pMysql));
-			}
-			// 删除user_tbl中新添加的数据
+			// 删除刚添加的用户
 			Mysql_BackToPool(pMysql);
-			return ErrorInfo(sbuf, _msgpack, bobj);
+			return false;
 		}
 
 		pSql = _T("SELECT %s FROM user_tbl WHERE id=%u");
@@ -165,7 +156,7 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 			memset(sql, 0x00, sizeof(sql));
 			if (nUsertype == 1)
 			{
-				pSql = _T("SELECT %s FROM user_tbl WHERE Fatherid=1");
+				pSql = _T("SELECT %s FROM user_tbl");
 				_stprintf_s(sql, 256, pSql, USER_ITEM);
 			}
 			else

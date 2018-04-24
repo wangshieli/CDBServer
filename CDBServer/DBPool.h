@@ -28,3 +28,5 @@ bool CreateUserTbl();
 bool InsertIntoTbl(const TCHAR* sql, MYSQL* pMysql);
 
 bool SelectFromTbl(const TCHAR* sql, MYSQL* pMysql, BUFFER_OBJ* bobj, MYSQL_RES** res);
+
+bool UpdateTbl(const TCHAR* sql, MYSQL* pMysql, BUFFER_OBJ* bobj);

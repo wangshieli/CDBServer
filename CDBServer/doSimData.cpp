@@ -83,6 +83,58 @@ ON DUPLICATE KEY UPDATE jlxm='%s',lltc='%s',zt='%s',ssdq='%s',khmc='%s',xsrq='%s
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		unsigned int nId = (pDataObj++)->as<unsigned int>();
+		int nUsertype = (pDataObj++)->as<int>();
+		std::string strKhmc = (pDataObj++)->as<std::string>();
+
+		if (!bobj->res)
+		{
+			const TCHAR* pSql = NULL;
+			TCHAR sql[256];
+			memset(sql, 0x00, sizeof(sql));
+			if (nUsertype == 1)
+			{
+				pSql = _T("SELECT %s FROM sim_tbl");
+				_stprintf_s(sql, 256, pSql, USER_ITEM);
+			}
+			else
+			{
+				pSql = _T("SELECT %s FROM sim_tbl WHERE khmc='%s'");
+				_stprintf_s(sql, 256, pSql, USER_ITEM, strKhmc.c_str());
+			}
+
+			MYSQL* pMysql = Mysql_AllocConnection();
+			if (NULL == pMysql)
+			{
+				error_info(bobj, _T("连接数据库失败"));
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
+			}
+
+			if (!SelectFromTbl(sql, pMysql, bobj, &bobj->res))
+			{
+				Mysql_BackToPool(pMysql);
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
+			}
+
+			Mysql_BackToPool(pMysql);
+
+			bobj->nRecSetCount = (int)mysql_num_rows(bobj->res);
+		}
+
+		InitMsgpack(_msgpack, bobj->res, bobj, nPage, nTag);
+		MYSQL_ROW row = mysql_fetch_row(bobj->res);
+		while (row)
+		{
+			ParserUser(_msgpack, row);
+			row = mysql_fetch_row(bobj->res);
+		}
+
+		DealTail(sbuf, bobj);
+
+		int nTag = (pObj++)->as<int>();
+		int nPage = (pObj++)->as<int>();
 
 		if (!bobj->pRecorder)
 		{

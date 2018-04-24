@@ -141,7 +141,7 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			memset(sql, 0x00, sizeof(sql));
 			if (nUsertype == 1)
 			{
-				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE Fatherid=1");
+				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl");
 				//_stprintf_s(sql, 256, pSql, USER_ITEM);
 			}
 			else
