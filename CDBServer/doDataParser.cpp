@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <msgpack.hpp>
+#include <mysql.h>
 #include "SignalData.h"
 #include "doDataParser.h"
 
@@ -75,6 +76,31 @@ void PackCollectDate(msgpack::packer<msgpack::sbuffer>& _msgpack, const _variant
 	}
 }
 
+// row[0] = id;
+// row[1] = User;
+// row[2] = Password;
+// row[3] = Authority;
+// row[4] = Usertype;
+// row[5] = Fatherid;
+// row[6] = Dj;
+// row[7] = Xgsj;
+void ParserUser(msgpack::packer<msgpack::sbuffer>& _msgpack, MYSQL_ROW& row)
+{
+	unsigned int nTemp = 0;
+	_msgpack.pack_array(8);
+	_stscanf_s(row[0], _T("%u"), &nTemp);
+	_msgpack.pack(nTemp);
+	nTemp = 0;
+	_msgpack.pack(row[1]);
+	_msgpack.pack(row[2]);
+	_msgpack.pack(atoi(row[3]));
+	_msgpack.pack(atoi(row[4]));
+	_stscanf_s(row[5], _T("%u"), &nTemp);
+	_msgpack.pack(nTemp);
+	_msgpack.pack(atof(row[6]));
+	_msgpack.pack(row[7]);
+}
+
 void ParserUserData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder)
 {
 	_variant_t var;
@@ -129,6 +155,39 @@ void ParserSimData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& p
 	PackCollectDate(_msgpack, var, false);
 	var = pRecorder->GetCollect("bz");
 	PackCollectDate(_msgpack, var);
+}
+
+// id, Khmc, Userid, Usertype, Fatherid, Jlxm, Dj, Lxfs, Ssdq
+// row[0] = id;
+// row[1] = Khmc;
+// row[2] = Userid;
+// row[3] = Usertype;
+// row[4] = Fatherid;
+// row[5] = Jlxm;
+// row[6] = Dj;
+// row[7] = Lxfs;
+// row[8] = Ssdq
+void ParserKh(msgpack::packer<msgpack::sbuffer>& _msgpack, MYSQL_ROW& row)
+{
+	unsigned int nTemp = 0;
+	_msgpack.pack_array(8);
+	_stscanf_s(row[0], _T("%u"), &nTemp);
+	_msgpack.pack(nTemp);
+	nTemp = 0;
+	_msgpack.pack(row[1]);
+	_stscanf_s(row[2], _T("%u"), &nTemp);
+	_msgpack.pack(nTemp);
+	nTemp = 0;
+	_msgpack.pack(nTemp);
+	_msgpack.pack(atoi(row[3]));
+	_stscanf_s(row[4], _T("%u"), &nTemp);
+	_msgpack.pack(nTemp);
+	nTemp = 0;
+	_msgpack.pack(nTemp);
+	_msgpack.pack(row[5]);
+	_msgpack.pack(atof(row[6]));
+	_msgpack.pack(row[7]);
+	_msgpack.pack(row[8]);
 }
 
 void ParserKhData(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder)

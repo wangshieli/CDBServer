@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tbb\concurrent_hash_map.h>
+#include <mysql.h>
 using namespace tbb;
 
 typedef void(*PTIoRequestSuccess)(DWORD dwTranstion, void* key, void* buf);
@@ -17,6 +18,7 @@ public:
 	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
+	MYSQL_RES* res;
 	int nRecSetCount;
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;
@@ -37,6 +39,7 @@ public:
 		pfndoApiResponse = NULL;
 		pRelatedSObj = NULL;
 		ReleaseRecorder();
+		res = NULL;
 		nRecSetCount = 0;
 		dwRecvedCount = 0;
 		dwSendedCount = 0;
@@ -63,6 +66,15 @@ public:
 			pRecorder = NULL;
 		}
 	}
+
+	void ReleaseRes()
+	{
+		if (res)
+		{
+			mysql_free_result(res);
+			res = NULL;
+		}
+	}
 }BUFFER_OBJ;
 #define SIZE_OF_BUFFER_OBJ sizeof(BUFFER_OBJ)
 
@@ -75,6 +87,7 @@ public:
 	PTAPIResponse pfndoApiResponse;
 	struct _socket_obj* pRelatedSObj;
 	_RecordsetPtr pRecorder;
+	MYSQL_RES* res;
 	int nRecSetCount;
 	WSABUF wsaBuf;
 	DWORD dwRecvedCount;

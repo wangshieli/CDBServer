@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SignalData.h"
 #include "theHelpThread.h"
 #include "DBPool.h"
 

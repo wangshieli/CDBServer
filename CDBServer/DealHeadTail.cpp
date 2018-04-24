@@ -109,6 +109,25 @@ bool ErrorInfo(msgpack::sbuffer& sBuf, msgpack::packer<msgpack::sbuffer>& _msgpa
 	return false;
 }
 
+void InitMsgpack(msgpack::packer<msgpack::sbuffer>& _msgpack, MYSQL_RES* res, BUFFER_OBJ* bobj, int nPage, int nTag)
+{
+	_msgpack.pack_array(7);
+	_msgpack.pack(bobj->nCmd);
+	_msgpack.pack(bobj->nSubCmd);
+	_msgpack.pack(bobj->nSubSubCmd);
+	_msgpack.pack(nTag);
+	_msgpack.pack(0);
+	_msgpack.pack(bobj->nRecSetCount);
+
+	int nStart = (nTag - 1) * nPage;
+	int nTemp = bobj->nRecSetCount - nStart;
+	_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+	mysql_data_seek(res, nStart);
+	//int nTemp = bobj->nRecSetCount - nStart;
+	//_msgpack.pack_array(nTemp > nPage ? nPage : nTemp);
+	//bobj->pRecorder->Move(nStart, _variant_t((long)adBookmarkFirst));
+}
+
 void InitMsgpack(msgpack::packer<msgpack::sbuffer>& _msgpack, _RecordsetPtr& pRecorder, BUFFER_OBJ* bobj, int nPage, int nTag)
 {
 	_msgpack.pack_array(7);

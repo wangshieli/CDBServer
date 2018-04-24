@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SignalData.h"
 #include "Database_map.h"
 #include "DBPool.h"
 

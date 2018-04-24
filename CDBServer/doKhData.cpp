@@ -62,15 +62,6 @@ bool doKhData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strKhmc = (pDataObj++)->as<std::string>();
-//		const TCHAR* pSql = _T("SELECT a.sim_total, COALESCE(a.sim_using,0) as sim_using,COALESCE(a.use_15d,0) as use_15d,COALESCE(a.use_1m,0) as use_1m,\
-//COALESCE(a.due_1m,0) as due_1m,COALESCE(a.due_15d,0) as due_15d,\
-//b.jlxm,b.lxfs FROM (SELECT COUNT(*) AS 'sim_total',\
-//SUM(CASE WHEN zt='在用' THEN 1 ELSE 0 END) AS 'sim_using',\
-//SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'use_15d',\
-//SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'use_1m',\
-//SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'due_1m',\
-//SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'due_15d' \
-//FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		const TCHAR* pSql = _T("SELECT a.*,b.jlxm,b.lxfs FROM (SELECT COUNT(*) AS 'sim_total',\
 SUM(CASE WHEN zt='在用' THEN 1 ELSE 0 END) AS 'sim_using',\
 SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'use_15d',\
@@ -138,24 +129,51 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		unsigned int nId = (pDataObj++)->as<unsigned int>();
+		int nUsertype = (pDataObj++)->as<int>();
 
-		if (!bobj->pRecorder)
+		if (!bobj->res)
 		{
-			const TCHAR* pSql = _T("SELECT id,khmc,lxfs,jlxm,xgsj,bz FROM kh_tbl ");
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			const TCHAR* pSql = NULL;
+			TCHAR sql[256];
+			memset(sql, 0x00, sizeof(sql));
+			if (nUsertype == 1)
 			{
+				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE Fatherid=1");
+				//_stprintf_s(sql, 256, pSql, USER_ITEM);
+			}
+			else
+			{
+				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE Fatherid=%u");
+				_stprintf_s(sql, 256, pSql, USER_ITEM, nId);
+			}
+
+			MYSQL* pMysql = Mysql_AllocConnection();
+			if (NULL == pMysql)
+			{
+				error_info(bobj, _T("连接数据库失败"));
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
-			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
+
+			if (!SelectFromTbl(sql, pMysql, bobj, &bobj->res))
+			{
+				Mysql_BackToPool(pMysql);
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
+			}
+
+			Mysql_BackToPool(pMysql);
+
+			bobj->nRecSetCount = (int)mysql_num_rows(bobj->res);
 		}
 
-		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
-		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
-		while (!bRt && nPage--)
+		InitMsgpack(_msgpack, bobj->res, bobj, nPage, nTag);
+		MYSQL_ROW row = mysql_fetch_row(bobj->res);
+		while (row)
 		{
-			ParserKhData(_msgpack, bobj->pRecorder);
-			bobj->pRecorder->MoveNext();
-			bRt = bobj->pRecorder->GetadoEOF();
+			ParserKh(_msgpack, row);
+			row = mysql_fetch_row(bobj->res);
 		}
 
 		DealTail(sbuf, bobj);
@@ -401,5 +419,84 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 		break;
 	}
 
+	return true;
+}
+
+bool OnTimer()
+{
+	const TCHAR* pSql = _T("SELECT id,Khmc FROM kh_tbl");;
+	TCHAR sql[256];
+	memset(sql, 0x00, sizeof(sql));
+
+	MYSQL* pMysql = Mysql_AllocConnection();
+	if (NULL == pMysql)
+	{
+		return false;
+	}
+
+	size_t len = _tcslen(sql);
+	if (0 != mysql_real_query(pMysql, sql, (ULONG)len))
+	{
+		return false;
+	}
+
+	MYSQL_RES* res = mysql_store_result(pMysql);
+	if (NULL == res)
+	{
+		Mysql_BackToPool(pMysql);
+		return false;
+	}
+
+	MYSQL_ROW row = mysql_fetch_row(res);
+	while (row)
+	{
+		pSql = _T("SELECT a.*,b.jlxm,b.lxfs FROM (SELECT COUNT(*) AS 'sim_total',\
+SUM(CASE WHEN zt='在用' THEN 1 ELSE 0 END) AS 'sim_using',\
+SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'On15',\
+SUM(CASE WHEN dqrq>CURDATE() AND dqrq<DATE_ADD(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'On1',\
+SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 1 MONTH) THEN 1 ELSE 0 END) AS 'Du1',\
+SUM(CASE WHEN dqrq<CURDATE() AND dqrq>DATE_SUB(CURDATE(),INTERVAL 15 DAY) THEN 1 ELSE 0 END) AS 'Du15' \
+FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, sizeof(sql), pSql, row[1], row[1]);
+		size_t len = _tcslen(sql);
+		if (0 != mysql_real_query(pMysql, sql, (ULONG)len))
+		{
+			row = mysql_fetch_row(res);
+			continue;
+		}
+
+		MYSQL_RES* subres = mysql_store_result(pMysql);
+		if (NULL == subres)
+		{
+			row = mysql_fetch_row(res);
+			continue;
+		}
+
+		unsigned int nId = 0, nOn15 = 0, nOn1 = 0, nDu1 = 0, nDu15 = 0;
+		MYSQL_ROW subrow = mysql_fetch_row(subres);
+		_stscanf_s(row[0], "%u", &nId);
+		_stscanf_s(subrow[2], "%u", &nOn15);
+		_stscanf_s(subrow[3], "%u", &nOn1);
+		_stscanf_s(subrow[4], "%u", &nDu1);
+		_stscanf_s(subrow[5], "%u", &nDu15);
+		pSql = _T("UPDATE TABLE kh_tbl set On15=%u,On1=%u,Du1=%u,Du15=%u WHERE id=%u");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, sizeof(sql), pSql, nOn15, nOn1, nDu1, nDu15, nId);
+		len = _tcslen(sql);
+		if (0 != mysql_real_query(pMysql, sql, (ULONG)len))
+		{
+			mysql_free_result(subres);
+			row = mysql_fetch_row(res);
+			continue;
+		}
+		mysql_free_result(subres);
+
+		row = mysql_fetch_row(res);
+	}
+
+	Mysql_BackToPool(pMysql);
+
+	mysql_free_result(res);
 	return true;
 }

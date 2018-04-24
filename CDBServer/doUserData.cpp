@@ -20,36 +20,89 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 	case USER_ADD:
 	{
+		// 用户名，密码，权限，类型，用户id，单价，客户名称，经理姓名，联系方式，所属地区
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
-		std::string strUserName = (pDataObj++)->as<std::string>();
-		std::string strUserPwd = (pDataObj++)->as<std::string>();
+		std::string strUser = (pDataObj++)->as<std::string>();
+		std::string strPassword = (pDataObj++)->as<std::string>();
 		int nAuthority = (pDataObj++)->as<int>();
-		double dDj = (pDataObj++)->as<double>();
+		int nUsertype = (pDataObj++)->as<int>();
+		unsigned int nFatherid  = (pDataObj++)->as<unsigned int>();
+		double nDj = (pDataObj++)->as<double>();
+		std::string strKhmc = (pDataObj++)->as<std::string>();
+		std::string strJlxm = (pDataObj++)->as<std::string>();
+		std::string strLxfs = (pDataObj++)->as<std::string>();
+		std::string strSsdq = (pDataObj++)->as<std::string>();
 
-		const TCHAR* pSql = _T("INSERT INTO user_tbl (id,username,password,authority,dj,xgsj) VALUES(null,'%s','%s',%d,%lf,now())");
+		const TCHAR* pSql = _T("INSERT INTO user_tbl (%s) VALUES(null,'%s','%s',%d,%d,%u,%f,now())");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str(), nAuthority, dDj);
+		_stprintf_s(sql, 256, pSql, USER_ITEM, strUser.c_str(), strPassword.c_str(), nAuthority, nUsertype, nFatherid, nDj);
 
-		if (!ExecuteSql(sql))
+		MYSQL* pMysql = Mysql_AllocConnection();
+		if (NULL == pMysql)
 		{
+			error_info(bobj, _T("连接数据库失败"));
 			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
-		pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl where username='%s' and password='%s'");
+
+		if (!InsertIntoTbl(sql, pMysql))
+		{
+			UINT uError = mysql_errno(pMysql);
+			if (uError == 1062)
+			{
+				error_info(bobj, _T("已经存在的用户名"));
+			}
+			else
+			{
+				error_info(bobj, _T("数据库异常 ErrorCode = %08x, ErrorMsg = %s"), uError, mysql_error(pMysql));
+			}
+			Mysql_BackToPool(pMysql);
+			return ErrorInfo(sbuf, _msgpack, bobj);
+		}
+
+		my_ulonglong nIndex = mysql_insert_id(pMysql);
+
+		pSql = _T("INSERT INTO kh_tbl (id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq) VALUES(null,'%s',%u,%d,%u,'%s',%f,'%s','%s'))");
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
-		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		_stprintf_s(sql, sizeof(sql), pSql, strKhmc.c_str(),(unsigned int)nIndex,nUsertype,nFatherid,strJlxm.c_str(),nDj,strLxfs.c_str(),strSsdq.c_str());
+		if (!InsertIntoTbl(sql, pMysql))
 		{
+			UINT uError = mysql_errno(pMysql);
+			if (uError == 1062)
+			{
+				error_info(bobj, _T("已经存在的客户名称"));
+			}
+			else
+			{
+				error_info(bobj, _T("数据库异常 ErrorCode = %08x, ErrorMsg = %s"), uError, mysql_error(pMysql));
+			}
+			// 删除user_tbl中新添加的数据
+			Mysql_BackToPool(pMysql);
 			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
+
+		pSql = _T("SELECT %s FROM user_tbl WHERE id=%u");
+		memset(sql, 0x00, sizeof(sql));
+		_stprintf_s(sql, sizeof(sql), pSql, USER_ITEM, (unsigned int)nIndex);
+
+		MYSQL_RES* res = NULL;
+		if (!SelectFromTbl(sql, pMysql, bobj, &res))
+		{
+			Mysql_BackToPool(pMysql);
+			return ErrorInfo(sbuf, _msgpack, bobj);
+		}
+
+		Mysql_BackToPool(pMysql);
 
 		_msgpack.pack_array(4);
 		_msgpack.pack(bobj->nCmd);
 		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
-		ParserUserData(_msgpack, bobj->pRecorder);
+		MYSQL_ROW row = mysql_fetch_row(res);
+		ParserUser(_msgpack, row);
+		mysql_free_result(res);
 		
 		DealTail(sbuf, bobj);
 	}
@@ -59,23 +112,38 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
-		std::string strUserName = (pDataObj++)->as<std::string>();
-		std::string strUserPwd = (pDataObj++)->as<std::string>();
-		const TCHAR* pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl WHERE username='%s' AND password='%s'");
+		std::string strUser = (pDataObj++)->as<std::string>();
+		std::string strPassword = (pDataObj++)->as<std::string>();
+
+		const TCHAR* pSql = _T("SELECT %s FROM user_tbl WHERE User='%s' AND Password='%s'");
 		TCHAR sql[256];
 		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, 256, pSql, strUserName.c_str(), strUserPwd.c_str());
-		if (!Select_From_Tbl(sql, bobj->pRecorder))
+		_stprintf_s(sql, 256, pSql, USER_ITEM, strUser.c_str(), strPassword.c_str());
+
+		MYSQL* pMysql = Mysql_AllocConnection();
+		if (NULL == pMysql)
 		{
+			error_info(bobj, _T("连接数据库失败"));
 			return ErrorInfo(sbuf, _msgpack, bobj);
 		}
+
+		MYSQL_RES* res = NULL;
+		if (!SelectFromTbl(sql, pMysql, bobj, &res))
+		{
+			Mysql_BackToPool(pMysql);
+			return ErrorInfo(sbuf, _msgpack, bobj);
+		}
+
+		Mysql_BackToPool(pMysql);
 
 		_msgpack.pack_array(4);
 		_msgpack.pack(bobj->nCmd);
 		_msgpack.pack(bobj->nSubCmd);
 		_msgpack.pack(0);
 		_msgpack.pack_array(1);
-		ParserUserData(_msgpack, bobj->pRecorder);
+		MYSQL_ROW row = mysql_fetch_row(res);
+		ParserUser(_msgpack, row);
+		mysql_free_result(res);
 
 		DealTail(sbuf, bobj);
 	}
@@ -85,24 +153,51 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
+		msgpack::object* pArray = (pObj++)->via.array.ptr;
+		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
+		unsigned int nId = (pDataObj++)->as<unsigned int>();
+		int nUsertype = (pDataObj++)->as<int>();
 
-		if (!bobj->pRecorder)
+		if (!bobj->res)
 		{
-			const TCHAR* pSql = _T("SELECT id,username,password,authority,dj,xgsj FROM user_tbl");
-			if (!Select_From_Tbl(pSql, bobj->pRecorder))
+			const TCHAR* pSql = NULL;
+			TCHAR sql[256];
+			memset(sql, 0x00, sizeof(sql));
+			if (nUsertype == 1)
 			{
+				pSql = _T("SELECT %s FROM user_tbl WHERE Fatherid=1");
+				_stprintf_s(sql, 256, pSql, USER_ITEM);
+			}
+			else
+			{
+				pSql = _T("SELECT %s FROM user_tbl WHERE Fatherid=%u");
+				_stprintf_s(sql, 256, pSql, USER_ITEM, nId);
+			}
+			
+			MYSQL* pMysql = Mysql_AllocConnection();
+			if (NULL == pMysql)
+			{
+				error_info(bobj, _T("连接数据库失败"));
 				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
 			}
-			bobj->nRecSetCount = bobj->pRecorder->GetRecordCount();
+
+			if (!SelectFromTbl(sql, pMysql, bobj, &bobj->res))
+			{
+				Mysql_BackToPool(pMysql);
+				return ErrorInfo(sbuf, _msgpack, bobj, nTag);
+			}
+
+			Mysql_BackToPool(pMysql);
+			
+			bobj->nRecSetCount = (int)mysql_num_rows(bobj->res);
 		}
 
-		InitMsgpack(_msgpack, bobj->pRecorder, bobj, nPage, nTag);
-		VARIANT_BOOL bRt = bobj->pRecorder->GetadoEOF();
-		while (!bRt && nPage--)
+		InitMsgpack(_msgpack, bobj->res, bobj, nPage, nTag);
+		MYSQL_ROW row = mysql_fetch_row(bobj->res);
+		while (row)
 		{
-			ParserUserData(_msgpack, bobj->pRecorder);
-			bobj->pRecorder->MoveNext();
-			bRt = bobj->pRecorder->GetadoEOF();
+			ParserUser(_msgpack, row);
+			row = mysql_fetch_row(bobj->res);
 		}
 
 		DealTail(sbuf, bobj);
