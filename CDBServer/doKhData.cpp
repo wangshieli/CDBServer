@@ -127,6 +127,7 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 
 	case KH_LIST:
 	{
+#define KH_ITEM _T("id,Khmc,Userid,nFatherid,Jlxm,Dj,Lxfs,Ssdq,On1m,On15d,Du15d,Du1m")
 		int nTag = (pObj++)->as<int>();
 		int nPage = (pObj++)->as<int>();
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
@@ -141,12 +142,12 @@ FROM sim_tbl WHERE khmc='%s') a LEFT JOIN kh_tbl b ON b.khmc='%s'");
 			memset(sql, 0x00, sizeof(sql));
 			if (nUsertype == 1)
 			{
-				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE Fatherid=1");
+				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE nFatherid=1");
 				//_stprintf_s(sql, 256, pSql, USER_ITEM);
 			}
 			else
 			{
-				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE Fatherid=%u");
+				pSql = _T("SELECT id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq FROM kh_tbl WHERE nFatherid=%u");
 				_stprintf_s(sql, 256, pSql, USER_ITEM, nId);
 			}
 

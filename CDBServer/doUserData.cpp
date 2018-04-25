@@ -20,7 +20,6 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 	{
 	case USER_ADD:
 	{
-		// 用户名，密码，权限，类型，用户id，单价，客户名称，经理姓名，联系方式，所属地区
 		msgpack::object* pArray = (pObj++)->via.array.ptr;
 		msgpack::object* pDataObj = (pArray++)->via.array.ptr;
 		std::string strUser = (pDataObj++)->as<std::string>();
@@ -30,9 +29,6 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 		unsigned int nFatherid  = (pDataObj++)->as<unsigned int>();
 		double nDj = (pDataObj++)->as<double>();
 		std::string strKhmc = (pDataObj++)->as<std::string>();
-		std::string strJlxm = (pDataObj++)->as<std::string>();
-		std::string strLxfs = (pDataObj++)->as<std::string>();
-		std::string strSsdq = (pDataObj++)->as<std::string>();
 
 		const TCHAR* pSql = _T("INSERT INTO user_tbl (%s) VALUES(null,'%s','%s',%d,%d,%u,%f,now())");
 		TCHAR sql[256];
@@ -63,24 +59,9 @@ bool doUserData(msgpack::unpacked& pCmdInfo, BUFFER_OBJ* bobj)
 
 		my_ulonglong nIndex = mysql_insert_id(pMysql);
 
-		pSql = _T("INSERT INTO kh_tbl (id,Khmc,Userid,Usertype,Fatherid,Jlxm,Dj,Lxfs,Ssdq) VALUES(null,'%s',%u,%d,%u,'%s',%f,'%s','%s'))");
-		memset(sql, 0x00, sizeof(sql));
-		_stprintf_s(sql, sizeof(sql), pSql, strKhmc.c_str(),(unsigned int)nIndex,nUsertype,nFatherid,strJlxm.c_str(),nDj,strLxfs.c_str(),strSsdq.c_str());
-		if (!InsertIntoTbl(sql, pMysql))
-		{
-			UINT uError = mysql_errno(pMysql);
-			if (uError == 1062)
-			{
-				error_info(bobj, _T("已经存在的客户名称"));
-			}
-			else
-			{
-				error_info(bobj, _T("数据库异常 ErrorCode = %08x, ErrorMsg = %s"), uError, mysql_error(pMysql));
-			}
-			// 删除user_tbl中新添加的数据
-			Mysql_BackToPool(pMysql);
-			return ErrorInfo(sbuf, _msgpack, bobj);
-		}
+		// 更新客户表，userid,nfatherid
+		pSql = _T("SELECT Userid FROM kh_tbl WHERE khmc='%s'");// 如果Userid不为0 说明已经注册用户  // 放到最前
+		pSql = _T("UPDATE TABLE kh_tbl SET Userid=%u,nFatherid=%u WHERE khmc='%s'");
 
 		pSql = _T("SELECT %s FROM user_tbl WHERE id=%u");
 		memset(sql, 0x00, sizeof(sql));

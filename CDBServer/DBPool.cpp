@@ -616,12 +616,18 @@ bool CreateUserTbl()
 #define CREATE_KH_TBL _T("CREATE TABLE IF NOT EXISTS kh_tbl(id int nusigned not null auto_increment,\
 Khmc char(41),\
 Userid int unsigned,\
+nFatherid int unsigned,\
 Jlxm varchar(32),\
 Dj double(8,2),\
 Lxfs varchar(64),\
 Ssdq varchar(64), \
+On1m int unsigned,\
+On15d int unsigned,\
+Du15d int unsigned,\
+Du1m int unsigned,\
 primary key(id),\
 unique key(Khmc))")
+#define KH_ITEM _T("id,Khmc,Userid,nFatherid,Jlxm,Dj,Lxfs,Ssdq,On1m,On15d,Du15d,Du1m")
 bool CreateKhTbl()
 {
 	MYSQL* pMysql = Mysql_AllocConnection();
